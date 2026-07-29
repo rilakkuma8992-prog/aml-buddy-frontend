@@ -54,6 +54,8 @@ const UI_TEXT = {
     revisionDate:"最後修訂日期",
     staleNotice:"最新版本可能無法及時更新，請以iKnow知識平台公告為準",
     contactFooterButton:"洽詢洗防窗口",
+    footerNotice:"本頁面內容依據總行內規彙整，主要供海外分行／子行同仁參考，如遇當地規範另有規定，請以當地規範為準",
+    footerCredits:"共同開發：Stanley Liu、Cindy Liu、Leah Fu",
     modalTitle:"聯絡洗防窗口",
     modalBody:"找不到您要的答案嗎？<br>請聯繫洗防部 AML 專責窗口：分機 1234<br>或內部信箱 aml-support@bank.internal",
     modalClose:"我知道了"
@@ -80,6 +82,8 @@ const UI_TEXT = {
     revisionDate:"Last Revision Date",
     staleNotice:"The latest version may not be updated immediately. Please refer to iKnow knowledge platform announcements.",
     contactFooterButton:"Still cannot find an answer? Contact the AML office",
+    footerNotice:"This page is compiled based on Head Office internal rules and is mainly for reference by overseas branch/subsidiary colleagues. If local regulations differ, local regulations prevail.",
+    footerCredits:"Co-developed by Stanley Liu, Cindy Liu, and Leah Fu",
     modalTitle:"Contact AML Office",
     modalBody:"Cannot find the answer you need?<br>Please contact the AML Office: extension 1234<br>or internal mailbox aml-support@bank.internal",
     modalClose:"Got it"
@@ -106,6 +110,8 @@ const UI_TEXT = {
     revisionDate:"最終改訂日",
     staleNotice:"最新版が即時に反映されない場合があります。iKnow知識プラットフォームの公告を基準にしてください。",
     contactFooterButton:"答えが見つかりませんか？AML窓口へお問い合わせください",
+    footerNotice:"本ページの内容は本部内部規程に基づいて整理したもので、主に海外支店・子会社の同仁向け参考資料です。現地規制に別段の定めがある場合は、現地規制を優先してください。",
+    footerCredits:"共同開発：Stanley Liu、Cindy Liu、Leah Fu",
     modalTitle:"AML窓口へ連絡",
     modalBody:"必要な回答が見つかりませんか？<br>AML専責窓口：内線 1234<br>または内部メール aml-support@bank.internal へご連絡ください",
     modalClose:"確認しました"
@@ -168,6 +174,25 @@ function normalizeLocalizedObject(value, fallback = ""){
   };
 }
 
+function applyFaqItemTranslations(item, sourceNo){
+  const translations = window.FAQ_TRANSLATIONS || {};
+  const translated = translations[String(sourceNo)] || translations[sourceNo];
+  if(!translated){
+    return item;
+  }
+
+  ["q","a","ref"].forEach(field => {
+    if(translated[field]){
+      item[field] = {
+        ...item[field],
+        ...translated[field]
+      };
+    }
+  });
+
+  return item;
+}
+
 function getFaqBizIds(value){
   const text = String(value || "").toLowerCase();
   const hasCorporate = text.includes("企金") || text.includes("corporate");
@@ -214,6 +239,7 @@ function buildDbFromFaqs(faqs){
       a:normalizeLocalizedObject(faq.a, faq.answer),
       ref:normalizeLocalizedObject(faq.ref, faq.reference)
     };
+    applyFaqItemTranslations(item, item.sourceNo);
 
     getFaqBizIds(faq.biz).forEach(bizId => {
       const topic = nextDB[bizId]?.aspects?.[aspectId]?.topics?.[categoryId];
@@ -980,6 +1006,14 @@ function renderChrome(){
   const languageSwitch = document.querySelector(".language-switch");
   if(languageSwitch){
     languageSwitch.setAttribute("aria-label", t("langLabel"));
+  }
+  const footerNotice = document.getElementById("footerNotice");
+  if(footerNotice){
+    footerNotice.textContent = t("footerNotice");
+  }
+  const footerCredits = document.getElementById("footerCredits");
+  if(footerCredits){
+    footerCredits.textContent = t("footerCredits");
   }
 
   renderSearchDropdown();
