@@ -915,6 +915,12 @@ Object.entries(FAQ_TRANSLATIONS).forEach(([sourceNo, value]) => {
   value.ref = value.ref || {};
 });
 
+Object.entries(FAQ_TRANSLATIONS).forEach(([sourceNo, value]) => {
+  if(/^\d+$/.test(sourceNo)){
+    FAQ_TRANSLATIONS["FAQ-"+String(sourceNo).padStart(3,"0")] = value;
+  }
+});
+
 function applyReferenceTranslationsToDb(db){
   Object.values(db || {}).forEach(biz => {
     Object.values(biz.aspects || {}).forEach(aspect => {

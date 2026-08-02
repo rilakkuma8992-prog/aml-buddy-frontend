@@ -1,7 +1,7 @@
 // ============================================================
 // AML Buddy desktop three-column interaction.
-// The static DB in js/data.js is the fallback. When the local API is running,
-// published FAQ records are loaded from data/faqs.json via /api/faqs.
+// The static DB in js/data.js is the fallback. In production, published FAQ
+// records are loaded from Supabase so different devices share the same source.
 // ============================================================
 
 const CATEGORY_DEFS = [
@@ -55,7 +55,7 @@ const UI_TEXT = {
     staleNotice:"最新版本可能無法及時更新，請以iKnow知識平台公告為準",
     contactFooterButton:"洽詢洗防窗口",
     footerNotice:"本頁面內容依據總行內規彙整，主要供海外分行／子行同仁參考，如遇當地規範另有規定，請以當地規範為準",
-    footerCredits:"共同開發：Stanley Liu、Cindy Liu、Leah Fu",
+    footerCredits:"共同開發：Stanley Liu、Cindy Liou、Leah Fu",
     modalTitle:"聯絡洗防窗口",
     modalBody:"找不到您要的答案嗎？<br>請聯繫洗防部 AML 專責窗口：分機 1234<br>或內部信箱 aml-support@bank.internal",
     modalClose:"我知道了"
@@ -83,7 +83,7 @@ const UI_TEXT = {
     staleNotice:"The latest version may not be updated immediately. Please refer to iKnow knowledge platform announcements.",
     contactFooterButton:"Still cannot find an answer? Contact the AML office",
     footerNotice:"This page is compiled based on Head Office internal rules and is mainly for reference by overseas branch/subsidiary colleagues. If local regulations differ, local regulations prevail.",
-    footerCredits:"Co-developed by Stanley Liu, Cindy Liu, and Leah Fu",
+    footerCredits:"Co-developed by Stanley Liu, Cindy Liou, and Leah Fu",
     modalTitle:"Contact AML Office",
     modalBody:"Cannot find the answer you need?<br>Please contact the AML Office: extension 1234<br>or internal mailbox aml-support@bank.internal",
     modalClose:"Got it"
@@ -111,14 +111,20 @@ const UI_TEXT = {
     staleNotice:"最新版が即時に反映されない場合があります。iKnow知識プラットフォームの公告を基準にしてください。",
     contactFooterButton:"答えが見つかりませんか？AML窓口へお問い合わせください",
     footerNotice:"本ページの内容は本部内部規程に基づいて整理したもので、主に海外支店・子会社の同仁向け参考資料です。現地規制に別段の定めがある場合は、現地規制を優先してください。",
-    footerCredits:"共同開発：Stanley Liu、Cindy Liu、Leah Fu",
+    footerCredits:"共同開発：Stanley Liu、Cindy Liou、Leah Fu",
     modalTitle:"AML窓口へ連絡",
     modalBody:"必要な回答が見つかりませんか？<br>AML専責窓口：内線 1234<br>または内部メール aml-support@bank.internal へご連絡ください",
     modalClose:"確認しました"
   }
 };
 
-const HAS_DYNAMIC_API = window.location.protocol === "file:" || ["localhost","127.0.0.1"].includes(window.location.hostname);
+const SUPABASE_CONFIG = window.AML_BUDDY_SUPABASE || {};
+const SUPABASE_TABLE = SUPABASE_CONFIG.table || "aml_buddy_faqs";
+const HAS_SUPABASE_CONFIG = Boolean(SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey && window.supabase?.createClient);
+const supabaseClient = HAS_SUPABASE_CONFIG
+  ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey)
+  : null;
+const HAS_DYNAMIC_API = HAS_SUPABASE_CONFIG || window.location.protocol === "file:" || ["localhost","127.0.0.1"].includes(window.location.hostname);
 const API_BASE = window.location.protocol === "file:" ? `http://127.0.0.1:${window.location.port || "3000"}` : "";
 const API_FAQS_URL = API_BASE + "/api/faqs?status=published&format=full";
 const API_REFRESH_MS = 5000;
@@ -174,9 +180,22 @@ function normalizeLocalizedObject(value, fallback = ""){
   };
 }
 
-function applyFaqItemTranslations(item, sourceNo){
+function getOfficialSourceNoFromId(id){
+  const match = String(id || "").match(/^FAQ-(\d{3})$/);
+  if(!match) return "";
+  const numeric = Number(match[1]);
+  if(!Number.isInteger(numeric) || numeric < 1 || numeric > 50) return "";
+  return String(numeric);
+}
+
+function applyFaqItemTranslations(item, faq){
+  const sourceNo = getOfficialSourceNoFromId(faq?.id);
+  item.sourceNo = sourceNo;
+  if(!sourceNo){
+    return item;
+  }
   const translations = window.FAQ_TRANSLATIONS || {};
-  const translated = translations[String(sourceNo)] || translations[sourceNo];
+  const translated = translations[faq.id] || translations[String(sourceNo)] || translations[sourceNo];
   if(!translated){
     return item;
   }
@@ -229,17 +248,18 @@ function getFaqCategoryId(value){
 function buildDbFromFaqs(faqs){
   const nextDB = buildEmptyDb();
 
-  faqs.forEach((faq, index) => {
+  faqs.forEach(faq => {
     const aspectId = getFaqAspectId(faq.aspect);
     const categoryId = getFaqCategoryId(faq.category);
     const item = {
-      sourceNo:faq.sourceNo || index + 1,
+      id:faq.id || "",
+      sourceNo:"",
       revisionDate:faq.updated || faq.effective || REVISION_DATE,
       q:normalizeLocalizedObject(faq.q, faq.question),
       a:normalizeLocalizedObject(faq.a, faq.answer),
       ref:normalizeLocalizedObject(faq.ref, faq.reference)
     };
-    applyFaqItemTranslations(item, item.sourceNo);
+    applyFaqItemTranslations(item, faq);
 
     getFaqBizIds(faq.biz).forEach(bizId => {
       const topic = nextDB[bizId]?.aspects?.[aspectId]?.topics?.[categoryId];
@@ -286,6 +306,9 @@ function applyFaqs(faqs, options = {}){
 }
 
 function loadFaqsFromLocalStorage(options = {}){
+  if(HAS_SUPABASE_CONFIG){
+    return false;
+  }
   try{
     const raw = window.localStorage.getItem(ADMIN_STORAGE_KEY);
     if(!raw){
@@ -294,6 +317,9 @@ function loadFaqsFromLocalStorage(options = {}){
     const adminState = JSON.parse(raw);
     const faqs = Array.isArray(adminState.faqs)
       ? adminState.faqs.flatMap(faq => {
+          if(faq.status === "deleted"){
+            return [];
+          }
           if(faq.status === "published"){
             return [faq];
           }
@@ -312,7 +338,55 @@ function loadFaqsFromLocalStorage(options = {}){
   }
 }
 
+function normalizeSupabaseFaqRow(row){
+  const payload = row?.payload && typeof row.payload === "object" ? row.payload : {};
+  return {
+    ...payload,
+    id:row.id || payload.id,
+    status:row.status || payload.status || "published",
+    biz:payload.biz || row.biz || "",
+    aspect:payload.aspect || row.aspect || "",
+    category:payload.category || row.category || "",
+    owner:payload.owner || row.owner || "",
+    version:payload.version || row.version || "",
+    updated:payload.updated || row.updated_on || "",
+    effective:payload.effective || row.effective || "",
+    nextReview:payload.nextReview || row.next_review || "",
+    q:payload.q || {zh:payload.question || "",en:"",ja:""},
+    a:payload.a || {zh:payload.answer || "",en:"",ja:""},
+    ref:payload.ref || {zh:payload.reference || "",en:"",ja:""},
+    source:payload.source || "",
+    article:payload.article || "",
+    link:payload.link || ""
+  };
+}
+
+async function loadFaqsFromSupabase(){
+  if(!supabaseClient){
+    return false;
+  }
+  const {data,error} = await supabaseClient
+    .from(SUPABASE_TABLE)
+    .select("id,status,biz,aspect,category,owner,version,updated_on,effective,next_review,payload,deleted_at")
+    .eq("status","published")
+    .is("deleted_at", null)
+    .order("id",{ascending:true});
+  if(error){
+    throw error;
+  }
+  const faqs = (data || []).map(normalizeSupabaseFaqRow);
+  return applyFaqs(faqs);
+}
+
 async function loadFaqsFromApi(){
+  if(HAS_SUPABASE_CONFIG){
+    try{
+      return await loadFaqsFromSupabase();
+    }catch(error){
+      console.warn("loadFaqsFromSupabase failed", error);
+      return false;
+    }
+  }
   if(!HAS_DYNAMIC_API){
     return false;
   }
@@ -1042,14 +1116,24 @@ document.addEventListener("click", event => {
 
 window.addEventListener("resize", updateLayoutMetrics);
 window.addEventListener("storage", event => {
-  if(event.key === ADMIN_STORAGE_KEY){
+  if(!HAS_SUPABASE_CONFIG && event.key === ADMIN_STORAGE_KEY){
     loadFaqsFromLocalStorage();
   }
 });
 
-loadFaqsFromLocalStorage({render:false});
+if(!HAS_SUPABASE_CONFIG){
+  loadFaqsFromLocalStorage({render:false});
+}
 render();
-loadFaqsFromApi().then(() => loadFaqsFromLocalStorage());
+loadFaqsFromApi().then(() => {
+  if(!HAS_SUPABASE_CONFIG){
+    loadFaqsFromLocalStorage();
+  }
+});
 setInterval(() => {
-  loadFaqsFromApi().then(() => loadFaqsFromLocalStorage());
+  loadFaqsFromApi().then(() => {
+    if(!HAS_SUPABASE_CONFIG){
+      loadFaqsFromLocalStorage();
+    }
+  });
 }, API_REFRESH_MS);
