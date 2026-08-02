@@ -26,21 +26,21 @@ const SEARCH_KEYWORDS = [
                       "ja":  "KYC/CDD"
                   },
         "query":  {
-                      "zh":  "KYC CDD 客戶審查",
-                      "en":  "KYC CDD 客戶審查",
-                      "ja":  "KYC CDD 客戶審查"
+                      "zh":  "KYC/CDD",
+                      "en":  "KYC/CDD",
+                      "ja":  "KYC/CDD"
                   }
     },
     {
         "label":  {
                       "zh":  "實質受益人",
-                      "en":  "實質受益人",
-                      "ja":  "實質受益人"
+                      "en":  "Beneficial Owner",
+                      "ja":  "実質的支配者"
                   },
         "query":  {
-                      "zh":  "實質受益人 UBO",
-                      "en":  "實質受益人 UBO",
-                      "ja":  "實質受益人 UBO"
+                      "zh":  "實質受益人",
+                      "en":  "Beneficial Owner",
+                      "ja":  "実質的支配者"
                   }
     },
     {
@@ -50,45 +50,45 @@ const SEARCH_KEYWORDS = [
                       "ja":  "PEP"
                   },
         "query":  {
-                      "zh":  "PEP RCA 政治人物",
-                      "en":  "PEP RCA 政治人物",
-                      "ja":  "PEP RCA 政治人物"
+                      "zh":  "PEP",
+                      "en":  "PEP",
+                      "ja":  "PEP"
                   }
     },
     {
         "label":  {
                       "zh":  "制裁篩檢",
-                      "en":  "制裁篩檢",
-                      "ja":  "制裁篩檢"
+                      "en":  "Sanctions Screening",
+                      "ja":  "制裁スクリーニング"
                   },
         "query":  {
-                      "zh":  "制裁 名單 篩檢 Sanctions Screening",
-                      "en":  "制裁 名單 篩檢 Sanctions Screening",
-                      "ja":  "制裁 名單 篩檢 Sanctions Screening"
+                      "zh":  "制裁",
+                      "en":  "Sanctions Screening",
+                      "ja":  "制裁スクリーニング"
                   }
     },
     {
         "label":  {
                       "zh":  "俄羅斯制裁",
-                      "en":  "俄羅斯制裁",
-                      "ja":  "俄羅斯制裁"
+                      "en":  "Russia Sanctions",
+                      "ja":  "ロシア制裁"
                   },
         "query":  {
-                      "zh":  "俄羅斯 制裁 交易",
-                      "en":  "俄羅斯 制裁 交易",
-                      "ja":  "俄羅斯 制裁 交易"
+                      "zh":  "俄羅斯",
+                      "en":  "Russia Sanctions",
+                      "ja":  "ロシア制裁"
                   }
     },
     {
         "label":  {
                       "zh":  "定期審查",
-                      "en":  "定期審查",
-                      "ja":  "定期審查"
+                      "en":  "Periodic Review",
+                      "ja":  "定期審査"
                   },
         "query":  {
-                      "zh":  "定期審查 定審 風險",
-                      "en":  "定期審查 定審 風險",
-                      "ja":  "定期審查 定審 風險"
+                      "zh":  "定期審查",
+                      "en":  "Periodic Review",
+                      "ja":  "定期審査"
                   }
     }
 ];

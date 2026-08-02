@@ -52,6 +52,7 @@ const UI_TEXT = {
     emptyAnswer:"請根據左方分類選擇您的問題",
     refLabel:"參考",
     revisionDate:"最後修訂日期",
+    attachmentLabel:"附件連結",
     staleNotice:"最新版本可能無法及時更新，請以iKnow知識平台公告為準",
     contactFooterButton:"洽詢洗防窗口",
     footerNotice:"本頁面內容依據總行內規彙整，主要供海外分行／子行同仁參考，如遇當地規範另有規定，請以當地規範為準",
@@ -80,8 +81,9 @@ const UI_TEXT = {
     emptyAnswer:"Please select a question from the categories on the left.",
     refLabel:"Reference",
     revisionDate:"Last Revision Date",
+    attachmentLabel:"Attachment",
     staleNotice:"The latest version may not be updated immediately. Please refer to iKnow knowledge platform announcements.",
-    contactFooterButton:"Still cannot find an answer? Contact the AML office",
+    contactFooterButton:"Contact the AML Office",
     footerNotice:"This page is compiled based on Head Office internal rules and is mainly for reference by overseas branch/subsidiary colleagues. If local regulations differ, local regulations prevail.",
     footerCredits:"Co-developed by Stanley Liu, Cindy Liou, and Leah Fu",
     modalTitle:"Contact AML Office",
@@ -108,8 +110,9 @@ const UI_TEXT = {
     emptyAnswer:"左側の分類から質問を選択してください。",
     refLabel:"参考",
     revisionDate:"最終改訂日",
+    attachmentLabel:"添付資料",
     staleNotice:"最新版が即時に反映されない場合があります。iKnow知識プラットフォームの公告を基準にしてください。",
-    contactFooterButton:"答えが見つかりませんか？AML窓口へお問い合わせください",
+    contactFooterButton:"AML窓口へお問い合わせください",
     footerNotice:"本ページの内容は本部内部規程に基づいて整理したもので、主に海外支店・子会社の同仁向け参考資料です。現地規制に別段の定めがある場合は、現地規制を優先してください。",
     footerCredits:"共同開発：Stanley Liu、Cindy Liou、Leah Fu",
     modalTitle:"AML窓口へ連絡",
@@ -255,6 +258,7 @@ function buildDbFromFaqs(faqs){
       id:faq.id || "",
       sourceNo:"",
       revisionDate:faq.updated || faq.effective || REVISION_DATE,
+      link:faq.link || "",
       q:normalizeLocalizedObject(faq.q, faq.question),
       a:normalizeLocalizedObject(faq.a, faq.answer),
       ref:normalizeLocalizedObject(faq.ref, faq.reference)
@@ -890,6 +894,10 @@ function renderAnswerPanel(){
             <p class="meta-text">${escapeHtml(localize(item.ref))}</p>
             <p class="answer-label meta-label">${escapeHtml(t("revisionDate"))}</p>
             <p class="meta-text">${escapeHtml(item.revisionDate)}</p>
+            ${item.link ? `
+              <p class="answer-label meta-label">${escapeHtml(t("attachmentLabel"))}</p>
+              <p class="meta-text"><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.link)}</a></p>
+            ` : ""}
             <p class="meta-disclaimer">* ${escapeHtml(t("staleNotice"))}</p>
           </div>
         </div>`;
