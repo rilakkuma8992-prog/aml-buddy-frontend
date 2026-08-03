@@ -131,7 +131,7 @@ const HAS_DYNAMIC_API = HAS_SUPABASE_CONFIG || window.location.protocol === "fil
 const API_BASE = window.location.protocol === "file:" ? `http://127.0.0.1:${window.location.port || "3000"}` : "";
 const API_FAQS_URL = API_BASE + "/api/faqs?status=published&format=full";
 const API_REFRESH_MS = 5000;
-const ADMIN_STORAGE_KEY = "amlBuddyAdminOfficialFaqs.v2";
+const ADMIN_STORAGE_KEY = "amlBuddyAdminOfficialFaqs.v3";
 
 let activeDB = DB;
 let activeFaqSignature = "";
