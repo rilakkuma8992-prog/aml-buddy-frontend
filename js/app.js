@@ -380,6 +380,9 @@ async function loadFaqsFromSupabase(){
     throw error;
   }
   const faqs = (data || []).map(normalizeSupabaseFaqRow);
+  if(faqs.length === 0){
+    return false;
+  }
   return applyFaqs(faqs);
 }
 
