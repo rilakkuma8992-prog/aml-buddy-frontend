@@ -287,7 +287,8 @@ function makeFaqSignature(faqs){
     faq.category,
     faq.q?.zh || faq.question || "",
     faq.a?.zh || faq.answer || "",
-    faq.ref?.zh || faq.reference || ""
+    faq.ref?.zh || faq.reference || "",
+    faq.link || ""
   ]));
 }
 
