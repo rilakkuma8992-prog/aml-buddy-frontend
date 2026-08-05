@@ -4,12 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/style.css?v=20260805-mobile-menu">
 </head>
 <body>
 
 <header class="topbar">
   <div class="topbar-inner">
+    <button class="mobile-menu-btn" id="mobileMenuButton" type="button" aria-label="開啟選單" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
     <div class="brand-area">
       <div class="logo-slot">
         <img src="./assets/tree-logo.svg" alt="OO銀行 xxxx Bank">
@@ -36,6 +42,10 @@
         <button class="language-option" type="button" data-lang-option="en">EN</button>
         <span aria-hidden="true">／</span>
         <button class="language-option" type="button" data-lang-option="ja">日</button>
+        <button class="mobile-language-trigger" id="mobileLanguageButton" type="button" aria-haspopup="dialog" aria-expanded="false">
+          <span class="language-globe" aria-hidden="true"></span>
+          <span id="mobileLanguageLabel">ZH</span>
+        </button>
       </div>
     </div>
   </div>
@@ -49,6 +59,7 @@
   </footer>
 </main>
 
+<div class="mobile-menu-layer" id="mobileMenuLayer"></div>
 <div id="modalLayer"></div>
 
 <script>
@@ -58,9 +69,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js"></script>
-<script src="./js/data.js"></script>
-<script src="./js/translations.js"></script>
-<script src="./js/app.js"></script>
+<script src="./vendor/supabase-js.js?v=20260805-mobile-menu"></script>
+<script src="./js/data.js?v=20260805-mobile-menu"></script>
+<script src="./js/translations.js?v=20260805-mobile-menu"></script>
+<script src="./js/app.js?v=20260805-mobile-menu"></script>
 </body>
 </html>

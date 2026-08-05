@@ -31,10 +31,21 @@ const USEFUL_LINKS = [
   }
 ];
 
+const LANGUAGE_OPTIONS = [
+  {id:"zh", short:"ZH", label:{zh:"中文", en:"Chinese", ja:"中国語"}},
+  {id:"en", short:"EN", label:{zh:"English", en:"English", ja:"英語"}},
+  {id:"ja", short:"JA", label:{zh:"日本語", en:"Japanese", ja:"日本語"}}
+];
+
 const UI_TEXT = {
   zh: {
     documentTitle:"AML Buddy 互動原型 Demo",
     langLabel:"語言切換",
+    menuButtonLabel:"開啟選單",
+    closeMenuLabel:"關閉選單",
+    mobileMenuTitle:"選單",
+    mobileBizTitle:"業務別",
+    mobileFaqTitle:"常見問題",
     searchLabel:"搜尋",
     searchPlaceholder:"實質受益人",
     searchResults:"符合問題",
@@ -49,7 +60,7 @@ const UI_TEXT = {
     collapseAll:"全部收合",
     emptyCategory:"此分類目前尚無常見問題",
     answerPanelTitle:"答案",
-    emptyAnswer:"請根據左方分類選擇您的問題",
+    emptyAnswer:"請選擇您的問題",
     refLabel:"參考",
     revisionDate:"最後修訂日期",
     attachmentLabel:"附件連結",
@@ -57,6 +68,11 @@ const UI_TEXT = {
     contactFooterButton:"洽詢洗防窗口",
     footerNotice:"本頁面內容依據總行內規彙整，主要供海外分行／子行同仁參考，如遇當地規範另有規定，請以當地規範為準",
     footerCredits:"共同開發：Stanley Liu、Cindy Liou、Leah Fu",
+    languageSheetTitle:"語言",
+    languageSheetNote:"部分內容若尚未提供翻譯，將以中文顯示。",
+    languageSave:"儲存",
+    languageSaveNoChange:"目前語言",
+    closeLanguageLabel:"關閉語言選單",
     modalTitle:"聯絡洗防窗口",
     modalBody:"找不到您要的答案嗎？<br>請聯繫洗防部 AML 專責窗口：分機 1234<br>或內部信箱 aml-support@bank.internal",
     modalClose:"我知道了"
@@ -64,6 +80,11 @@ const UI_TEXT = {
   en: {
     documentTitle:"AML Buddy Interactive Demo",
     langLabel:"Language",
+    menuButtonLabel:"Open menu",
+    closeMenuLabel:"Close menu",
+    mobileMenuTitle:"Menu",
+    mobileBizTitle:"Business Line",
+    mobileFaqTitle:"FAQs",
     searchLabel:"Search",
     searchPlaceholder:"Beneficial owner",
     searchResults:"Matching Questions",
@@ -78,7 +99,7 @@ const UI_TEXT = {
     collapseAll:"Collapse all",
     emptyCategory:"No frequently asked questions in this category yet.",
     answerPanelTitle:"Answer",
-    emptyAnswer:"Please select a question from the categories on the left.",
+    emptyAnswer:"Please select a question.",
     refLabel:"Reference",
     revisionDate:"Last Revision Date",
     attachmentLabel:"Attachment",
@@ -86,6 +107,11 @@ const UI_TEXT = {
     contactFooterButton:"Contact the AML Office",
     footerNotice:"This page is compiled based on Head Office internal rules and is mainly for reference by overseas branch/subsidiary colleagues. If local regulations differ, local regulations prevail.",
     footerCredits:"Co-developed by Stanley Liu, Cindy Liou, and Leah Fu",
+    languageSheetTitle:"Language",
+    languageSheetNote:"Some content may fall back to Chinese when a translation is not yet available.",
+    languageSave:"Save",
+    languageSaveNoChange:"Current language",
+    closeLanguageLabel:"Close language menu",
     modalTitle:"Contact AML Office",
     modalBody:"Cannot find the answer you need?<br>Please contact the AML Office: extension 1234<br>or internal mailbox aml-support@bank.internal",
     modalClose:"Got it"
@@ -93,6 +119,11 @@ const UI_TEXT = {
   ja: {
     documentTitle:"AML Buddy インタラクティブデモ",
     langLabel:"言語切替",
+    menuButtonLabel:"メニューを開く",
+    closeMenuLabel:"メニューを閉じる",
+    mobileMenuTitle:"メニュー",
+    mobileBizTitle:"業務区分",
+    mobileFaqTitle:"よくある質問",
     searchLabel:"検索",
     searchPlaceholder:"実質的支配者",
     searchResults:"該当する質問",
@@ -107,7 +138,7 @@ const UI_TEXT = {
     collapseAll:"すべて閉じる",
     emptyCategory:"この分類には現在よくある質問がありません。",
     answerPanelTitle:"回答",
-    emptyAnswer:"左側の分類から質問を選択してください。",
+    emptyAnswer:"質問を選択してください。",
     refLabel:"参考",
     revisionDate:"最終改訂日",
     attachmentLabel:"添付資料",
@@ -115,6 +146,11 @@ const UI_TEXT = {
     contactFooterButton:"AML窓口へお問い合わせください",
     footerNotice:"本ページの内容は本部内部規程に基づいて整理したもので、主に海外支店・子会社の同仁向け参考資料です。現地規制に別段の定めがある場合は、現地規制を優先してください。",
     footerCredits:"共同開発：Stanley Liu、Cindy Liou、Leah Fu",
+    languageSheetTitle:"言語",
+    languageSheetNote:"翻訳が未提供の内容は、中国語で表示される場合があります。",
+    languageSave:"保存",
+    languageSaveNoChange:"現在の言語",
+    closeLanguageLabel:"言語メニューを閉じる",
     modalTitle:"AML窓口へ連絡",
     modalBody:"必要な回答が見つかりませんか？<br>AML専責窓口：内線 1234<br>または内部メール aml-support@bank.internal へご連絡ください",
     modalClose:"確認しました"
@@ -420,6 +456,7 @@ let selectedQuestion = null;
 let searchQuery = "";
 let recentSearches = [];
 let recentSearchTimer = null;
+let isMobileMenuOpen = false;
 
 function t(key){
   return UI_TEXT[currentLang][key];
@@ -750,6 +787,102 @@ function changeLanguage(lang){
 
 function closeModal(){
   document.getElementById("modalLayer").innerHTML = "";
+  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
+  if(mobileLanguageButton){
+    mobileLanguageButton.setAttribute("aria-expanded", "false");
+  }
+}
+
+function getLanguageOption(lang){
+  return LANGUAGE_OPTIONS.find(option => option.id === lang) || LANGUAGE_OPTIONS[0];
+}
+
+function syncMobileMenuState(){
+  document.body.classList.toggle("is-mobile-menu-open", isMobileMenuOpen);
+  const button = document.getElementById("mobileMenuButton");
+  if(button){
+    button.setAttribute("aria-expanded", String(isMobileMenuOpen));
+    button.setAttribute("aria-label", isMobileMenuOpen ? t("closeMenuLabel") : t("menuButtonLabel"));
+  }
+}
+
+function openMobileMenu(){
+  isMobileMenuOpen = true;
+  syncMobileMenuState();
+}
+
+function closeMobileMenu(){
+  isMobileMenuOpen = false;
+  syncMobileMenuState();
+}
+
+function openLanguageSheet(){
+  const layer = document.getElementById("modalLayer");
+  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
+  if(mobileLanguageButton){
+    mobileLanguageButton.setAttribute("aria-expanded", "true");
+  }
+
+  let pendingLang = currentLang;
+  layer.innerHTML = `
+    <div class="language-sheet-mask" role="presentation" data-close-language-sheet></div>
+    <section class="language-sheet" role="dialog" aria-modal="true" aria-labelledby="languageSheetTitle">
+      <div class="language-sheet-handle" aria-hidden="true"></div>
+      <div class="language-sheet-head">
+        <button class="language-sheet-close" type="button" aria-label="${escapeHtml(t("closeLanguageLabel"))}" data-close-language-sheet>
+          <span></span>
+          <span></span>
+        </button>
+        <h2 id="languageSheetTitle">${escapeHtml(t("languageSheetTitle"))}</h2>
+      </div>
+      <div class="language-visual" aria-hidden="true">
+        <span class="language-visual-card language-visual-card-zh">文</span>
+        <span class="language-visual-globe"></span>
+        <span class="language-visual-card language-visual-card-en">A</span>
+      </div>
+      <div class="language-choice-list">
+        ${LANGUAGE_OPTIONS.map(option => `
+          <button class="language-choice ${option.id === pendingLang ? "is-selected" : ""}" type="button" data-lang-sheet-option="${option.id}">
+            <span>${escapeHtml(localize(option.label))}</span>
+            <span class="language-check" aria-hidden="true"></span>
+          </button>
+        `).join("")}
+      </div>
+      <p class="language-sheet-note">${escapeHtml(t("languageSheetNote"))}</p>
+      <button class="language-save-btn" type="button" data-save-language disabled>${escapeHtml(t("languageSaveNoChange"))}</button>
+    </section>`;
+
+  const saveButton = layer.querySelector("[data-save-language]");
+  const updateSheetState = () => {
+    layer.querySelectorAll("[data-lang-sheet-option]").forEach(button => {
+      button.classList.toggle("is-selected", button.dataset.langSheetOption === pendingLang);
+    });
+    if(saveButton){
+      const hasChange = pendingLang !== currentLang;
+      saveButton.disabled = !hasChange;
+      saveButton.textContent = hasChange ? t("languageSave") : t("languageSaveNoChange");
+    }
+  };
+
+  layer.querySelectorAll("[data-lang-sheet-option]").forEach(button => {
+    button.onclick = () => {
+      pendingLang = button.dataset.langSheetOption;
+      updateSheetState();
+    };
+  });
+
+  layer.querySelectorAll("[data-close-language-sheet]").forEach(button => {
+    button.onclick = closeModal;
+  });
+
+  if(saveButton){
+    saveButton.onclick = () => {
+      if(pendingLang !== currentLang){
+        changeLanguage(pendingLang);
+      }
+      closeModal();
+    };
+  }
 }
 
 function openContactModal(){
@@ -763,6 +896,29 @@ function openContactModal(){
     </div>`;
 }
 
+function renderBizList(){
+  return `
+    <div class="biz-list">
+      ${getBizEntries().map(biz => `
+        <button class="biz-button ${biz.id === selectedBiz ? "is-active" : ""}" type="button" data-biz="${biz.id}">
+          <span>
+            <span class="biz-name">${escapeHtml(localize(biz.label))}</span>
+          </span>
+          <span class="biz-count">${getQuestionCount(biz.id)}</span>
+        </button>
+      `).join("")}
+    </div>`;
+}
+
+function renderUsefulLinks(){
+  return `
+    <div class="site-links">
+      ${USEFUL_LINKS.map(link => `
+        <a class="site-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}</a>
+      `).join("")}
+    </div>`;
+}
+
 function renderBizPanel(){
   return `
     <aside class="app-panel biz-panel">
@@ -771,25 +927,12 @@ function renderBizPanel(){
           <h2 class="panel-title">${escapeHtml(t("chooseBiz"))}</h2>
         </div>
         <div class="panel-body">
-          <div class="biz-list">
-            ${getBizEntries().map(biz => `
-              <button class="biz-button ${biz.id === selectedBiz ? "is-active" : ""}" type="button" data-biz="${biz.id}">
-                <span>
-                  <span class="biz-name">${escapeHtml(localize(biz.label))}</span>
-                </span>
-                <span class="biz-count">${getQuestionCount(biz.id)}</span>
-              </button>
-            `).join("")}
-          </div>
+          ${renderBizList()}
         </div>
       </div>
       <div class="sites-section">
         <h3 class="sites-title">${escapeHtml(t("usefulSites"))}</h3>
-        <div class="site-links">
-          ${USEFUL_LINKS.map(link => `
-            <a class="site-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}</a>
-          `).join("")}
-        </div>
+        ${renderUsefulLinks()}
       </div>
     </aside>`;
 }
@@ -822,6 +965,46 @@ function renderQuestionList(group){
     </div>`;
 }
 
+function renderCategoryStack(aspectGroups){
+  return `
+    <div class="aspect-stack">
+      ${aspectGroups.map(aspect => {
+        const isAspectOpen = expandedAspects.has(aspect.id);
+        const aspectQuestionTotal = aspect.categories.reduce((sum, group) =>
+          sum + group.topics.reduce((topicSum, topic) => topicSum + topic.questions.length, 0), 0
+        );
+
+        return `
+        <section class="topic-block aspect-block ${isAspectOpen ? "is-open" : ""}">
+          <button class="topic-toggle aspect-toggle" type="button" data-aspect-toggle="${aspect.id}" aria-expanded="${isAspectOpen}">
+            <span class="toggle-icon">${isAspectOpen ? "−" : "+"}</span>
+            <span class="topic-name">${escapeHtml(localize(aspect.label))}</span>
+            <span class="topic-count">${escapeHtml(formatQuestionCount(aspectQuestionTotal))}</span>
+          </button>
+          ${isAspectOpen ? `
+            <div class="topic-stack nested-topic-stack">
+              ${aspect.categories.map(group => {
+                const isOpen = expandedCategories.has(group.groupKey);
+                const questionTotal = group.topics.reduce((sum, topic) => sum + topic.questions.length, 0);
+
+                return `
+                  <section class="topic-block ${isOpen ? "is-open" : ""}">
+                    <button class="topic-toggle" type="button" data-aspect="${group.aspectId}" data-category="${group.categoryId}" aria-expanded="${isOpen}">
+                      <span class="toggle-icon">${isOpen ? "−" : "+"}</span>
+                      <span class="topic-name">${escapeHtml(localize(group.label))}</span>
+                      <span class="topic-count">${escapeHtml(formatQuestionCount(questionTotal))}</span>
+                    </button>
+                    ${isOpen ? renderQuestionList(group) : ""}
+                  </section>`;
+              }).join("")}
+            </div>
+          ` : ""}
+        </section>
+        `;
+      }).join("")}
+    </div>`;
+}
+
 function renderCategoryPanel(){
   const aspectGroups = buildCategoryGroups(selectedBiz);
   const allGroups = aspectGroups.flatMap(aspect => aspect.categories);
@@ -838,42 +1021,7 @@ function renderCategoryPanel(){
         </div>
       </div>
       <div class="panel-body">
-        <div class="aspect-stack">
-          ${aspectGroups.map(aspect => {
-            const isAspectOpen = expandedAspects.has(aspect.id);
-            const aspectQuestionTotal = aspect.categories.reduce((sum, group) =>
-              sum + group.topics.reduce((topicSum, topic) => topicSum + topic.questions.length, 0), 0
-            );
-
-            return `
-            <section class="topic-block aspect-block ${isAspectOpen ? "is-open" : ""}">
-              <button class="topic-toggle aspect-toggle" type="button" data-aspect-toggle="${aspect.id}" aria-expanded="${isAspectOpen}">
-                <span class="toggle-icon">${isAspectOpen ? "−" : "+"}</span>
-                <span class="topic-name">${escapeHtml(localize(aspect.label))}</span>
-                <span class="topic-count">${escapeHtml(formatQuestionCount(aspectQuestionTotal))}</span>
-              </button>
-              ${isAspectOpen ? `
-                <div class="topic-stack nested-topic-stack">
-                  ${aspect.categories.map(group => {
-                    const isOpen = expandedCategories.has(group.groupKey);
-                    const questionTotal = group.topics.reduce((sum, topic) => sum + topic.questions.length, 0);
-
-                    return `
-                      <section class="topic-block ${isOpen ? "is-open" : ""}">
-                        <button class="topic-toggle" type="button" data-aspect="${group.aspectId}" data-category="${group.categoryId}" aria-expanded="${isOpen}">
-                          <span class="toggle-icon">${isOpen ? "−" : "+"}</span>
-                          <span class="topic-name">${escapeHtml(localize(group.label))}</span>
-                          <span class="topic-count">${escapeHtml(formatQuestionCount(questionTotal))}</span>
-                        </button>
-                        ${isOpen ? renderQuestionList(group) : ""}
-                      </section>`;
-                  }).join("")}
-                </div>
-              ` : ""}
-            </section>
-            `;
-          }).join("")}
-        </div>
+        ${renderCategoryStack(aspectGroups)}
       </div>
     </section>`;
 }
@@ -920,6 +1068,56 @@ function renderAnswerPanel(){
         <button class="contact-card-btn" type="button" onclick="openContactModal()">${escapeHtml(t("contactFooterButton"))}</button>
       </div>
     </section>`;
+}
+
+function renderMobileMenu(){
+  const layer = document.getElementById("mobileMenuLayer");
+  if(!layer){
+    return;
+  }
+
+  const aspectGroups = buildCategoryGroups(selectedBiz);
+  const allGroups = aspectGroups.flatMap(aspect => aspect.categories);
+  const aspectKeys = getAllAspectKeys();
+  const allOpen = aspectKeys.every(aspectId => expandedAspects.has(aspectId)) &&
+    allGroups.every(group => expandedCategories.has(group.groupKey));
+
+  layer.innerHTML = `
+    <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
+    <aside class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-labelledby="mobileMenuTitle">
+      <div class="mobile-menu-top">
+        <button class="mobile-menu-close" type="button" aria-label="${escapeHtml(t("closeMenuLabel"))}" data-mobile-menu-close>
+          <span></span>
+          <span></span>
+        </button>
+        <h2 id="mobileMenuTitle">${escapeHtml(t("mobileMenuTitle"))}</h2>
+      </div>
+      <div class="mobile-menu-content">
+        <section class="mobile-menu-section">
+          <h3 class="mobile-section-title">${escapeHtml(t("mobileBizTitle"))}</h3>
+          <div class="mobile-menu-card">
+            ${renderBizList()}
+          </div>
+        </section>
+        <section class="mobile-menu-section">
+          <div class="mobile-section-head">
+            <h3 class="mobile-section-title">${escapeHtml(t("mobileFaqTitle"))}</h3>
+            <button class="expand-all-btn mobile-expand-all" type="button" data-toggle-all="true">${escapeHtml(allOpen ? t("collapseAll") : t("expandAll"))}</button>
+          </div>
+          <div class="mobile-menu-card mobile-question-card">
+            ${renderCategoryStack(aspectGroups)}
+          </div>
+        </section>
+        <section class="mobile-menu-section">
+          <h3 class="mobile-section-title">${escapeHtml(t("usefulSites"))}</h3>
+          <div class="mobile-menu-card mobile-site-card">
+            ${renderUsefulLinks()}
+          </div>
+        </section>
+      </div>
+    </aside>`;
+
+  syncMobileMenuState();
 }
 
 function renderSearchDropdown(){
@@ -1049,7 +1247,17 @@ function bindAppEvents(){
   });
 
   document.querySelectorAll("[data-aspect][data-topic][data-idx]").forEach(button => {
-    button.onclick = () => selectQuestion(button.dataset.aspect, button.dataset.topic, Number(button.dataset.idx));
+    button.onclick = () => {
+      const shouldCloseMenu = Boolean(button.closest("#mobileMenuLayer"));
+      selectQuestion(button.dataset.aspect, button.dataset.topic, Number(button.dataset.idx));
+      if(shouldCloseMenu){
+        closeMobileMenu();
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-mobile-menu-close]").forEach(button => {
+    button.onclick = closeMobileMenu;
   });
 }
 
@@ -1058,6 +1266,28 @@ function bindChromeEvents(){
     button.classList.toggle("is-active", button.dataset.langOption === currentLang);
     button.onclick = () => changeLanguage(button.dataset.langOption);
   });
+
+  const mobileMenuButton = document.getElementById("mobileMenuButton");
+  if(mobileMenuButton){
+    mobileMenuButton.onclick = () => {
+      if(isMobileMenuOpen){
+        closeMobileMenu();
+      }else{
+        openMobileMenu();
+      }
+    };
+  }
+
+  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
+  if(mobileLanguageButton){
+    mobileLanguageButton.setAttribute("aria-label", t("langLabel"));
+    mobileLanguageButton.onclick = openLanguageSheet;
+  }
+
+  const mobileLanguageLabel = document.getElementById("mobileLanguageLabel");
+  if(mobileLanguageLabel){
+    mobileLanguageLabel.textContent = getLanguageOption(currentLang).short;
+  }
 
   const searchInput = document.getElementById("keywordSearch");
   if(searchInput){
@@ -1116,6 +1346,7 @@ function render(){
     ${renderAnswerPanel()}
   `;
 
+  renderMobileMenu();
   bindAppEvents();
 }
 
