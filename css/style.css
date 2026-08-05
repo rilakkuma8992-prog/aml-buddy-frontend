@@ -916,6 +916,16 @@ button{
   display:block;
 }
 
+.answer-empty-mobile-choice{
+  display:none;
+}
+
+.answer-empty-biz-actions{
+  display:grid;
+  gap:12px;
+  justify-items:center;
+}
+
 .answer-empty-action{
   display:none;
   min-height:40px;
@@ -1649,17 +1659,39 @@ button{
 
   .answer-empty{
     min-height:100%;
-    gap:0;
+    gap:14px;
     padding:20px;
     font-size:14px;
   }
 
-  .answer-empty-text{
+  .answer-empty-question-prompt{
     display:none;
+  }
+
+  .answer-empty-mobile-choice{
+    display:grid;
+    gap:14px;
+    justify-items:center;
+  }
+
+  .answer-empty-business-prompt{
+    display:block;
+    color:var(--sub);
+    font-size:14px;
+    line-height:1.6;
+  }
+
+  .answer-empty-biz-actions{
+    width:min(172px,100%);
   }
 
   .answer-empty-action{
     display:inline-flex;
+  }
+
+  .answer-empty-biz-action{
+    width:100%;
+    min-height:44px;
   }
 
   .answer-question{

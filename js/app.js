@@ -58,6 +58,7 @@ const UI_TEXT = {
     usefulSitesTop:"常用",
     usefulSitesBottom:"網站",
     chooseQuestionCta:"選擇問題",
+    chooseBusinessPrompt:"請選擇您的業務別",
     closeUsefulSitesLabel:"關閉常用網站",
     chooseQuestion:"請選擇您的問題",
     emptyAspectCategory:"尚無相關問題，內容陸續建置中",
@@ -103,6 +104,7 @@ const UI_TEXT = {
     usefulSitesTop:"Useful",
     usefulSitesBottom:"Sites",
     chooseQuestionCta:"Select Question",
+    chooseBusinessPrompt:"Select Your Business Line",
     closeUsefulSitesLabel:"Close useful sites",
     chooseQuestion:"Select Your Question",
     emptyAspectCategory:"No related questions yet. Content is being added.",
@@ -148,6 +150,7 @@ const UI_TEXT = {
     usefulSitesTop:"便利",
     usefulSitesBottom:"サイト",
     chooseQuestionCta:"質問を選択",
+    chooseBusinessPrompt:"業務区分を選択してください",
     closeUsefulSitesLabel:"よく使うサイトを閉じる",
     chooseQuestion:"質問を選択してください",
     emptyAspectCategory:"関連する質問はまだありません。内容は順次追加中です。",
@@ -869,6 +872,23 @@ function openMobileMenu(){
   syncMobileMenuState();
 }
 
+function openMobileMenuForBiz(bizId){
+  if(!activeDB[bizId]){
+    return;
+  }
+
+  selectedBiz = bizId;
+  selectedQuestion = null;
+  expandedAspects = new Set();
+  expandedCategories = new Set();
+  clearRecentSearchTimer();
+  searchQuery = "";
+  renderAppPanels();
+  renderMobileMenu();
+  bindAppEvents();
+  openMobileMenu();
+}
+
 function closeMobileMenu(options = {}){
   if(!isMobileMenuOpen && !document.body.classList.contains("is-mobile-menu-closing")){
     return;
@@ -1412,8 +1432,17 @@ function renderMobileQuestionSection(){
 function renderAnswerPanel(){
   let answerHtml = `
     <div class="answer-empty">
-      <span class="answer-empty-text">${escapeHtml(t("emptyAnswer"))}</span>
-      <button class="answer-empty-action" type="button" data-open-question-menu>${escapeHtml(t("chooseQuestionCta"))}</button>
+      <span class="answer-empty-text answer-empty-question-prompt">${escapeHtml(t("emptyAnswer"))}</span>
+      <div class="answer-empty-mobile-choice">
+        <span class="answer-empty-text answer-empty-business-prompt">${escapeHtml(t("chooseBusinessPrompt"))}</span>
+        <div class="answer-empty-biz-actions">
+          ${getBizEntries().map(biz => `
+            <button class="answer-empty-action answer-empty-biz-action" type="button" data-open-question-menu-biz="${escapeHtml(biz.id)}">
+              ${escapeHtml(localize(biz.label))}
+            </button>
+          `).join("")}
+        </div>
+      </div>
     </div>`;
 
   if(selectedQuestion){
@@ -1464,6 +1493,7 @@ function renderMobileMenu(){
   if(!layer){
     return;
   }
+  const menuTitle = localize(activeDB[selectedBiz]?.label) || t("mobileMenuTitle");
 
   layer.innerHTML = `
     <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
@@ -1474,15 +1504,9 @@ function renderMobileMenu(){
           <span></span>
           <span></span>
         </button>
-        <h2 id="mobileMenuTitle">${escapeHtml(t("mobileMenuTitle"))}</h2>
+        <h2 id="mobileMenuTitle">${escapeHtml(menuTitle)}</h2>
       </div>
       <div class="mobile-menu-content">
-        <section class="mobile-menu-section">
-          <h3 class="mobile-section-title">${escapeHtml(t("mobileBizTitle"))}</h3>
-          <div class="mobile-menu-card" id="mobileBizSection">
-            ${renderBizList()}
-          </div>
-        </section>
         <section class="mobile-menu-section" id="mobileQuestionSection">
           ${renderMobileQuestionSection()}
         </section>
@@ -1663,6 +1687,10 @@ function bindAppEvents(){
 
   document.querySelectorAll("[data-open-question-menu]").forEach(button => {
     button.onclick = openMobileMenu;
+  });
+
+  document.querySelectorAll("[data-open-question-menu-biz]").forEach(button => {
+    button.onclick = () => openMobileMenuForBiz(button.dataset.openQuestionMenuBiz);
   });
 
   const mobileHeaderSearchButton = document.getElementById("mobileHeaderSearchButton");
