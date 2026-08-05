@@ -457,6 +457,8 @@ let searchQuery = "";
 let recentSearches = [];
 let recentSearchTimer = null;
 let isMobileMenuOpen = false;
+let mobileMenuCloseTimer = null;
+let languageSheetCloseTimer = null;
 
 function t(key){
   return UI_TEXT[currentLang][key];
@@ -793,6 +795,27 @@ function closeModal(){
   }
 }
 
+function closeLanguageSheet(){
+  const layer = document.getElementById("modalLayer");
+  const sheet = layer.querySelector(".language-sheet");
+  const mask = layer.querySelector(".language-sheet-mask");
+  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
+  if(mobileLanguageButton){
+    mobileLanguageButton.setAttribute("aria-expanded", "false");
+  }
+  if(!sheet){
+    closeModal();
+    return;
+  }
+
+  clearTimeout(languageSheetCloseTimer);
+  sheet.classList.add("is-closing");
+  mask?.classList.add("is-closing");
+  languageSheetCloseTimer = setTimeout(() => {
+    layer.innerHTML = "";
+  }, 260);
+}
+
 function getLanguageOption(lang){
   return LANGUAGE_OPTIONS.find(option => option.id === lang) || LANGUAGE_OPTIONS[0];
 }
@@ -807,13 +830,23 @@ function syncMobileMenuState(){
 }
 
 function openMobileMenu(){
+  clearTimeout(mobileMenuCloseTimer);
+  document.body.classList.remove("is-mobile-menu-closing");
   isMobileMenuOpen = true;
   syncMobileMenuState();
 }
 
 function closeMobileMenu(){
+  if(!isMobileMenuOpen){
+    return;
+  }
+  clearTimeout(mobileMenuCloseTimer);
   isMobileMenuOpen = false;
+  document.body.classList.add("is-mobile-menu-closing");
   syncMobileMenuState();
+  mobileMenuCloseTimer = setTimeout(() => {
+    document.body.classList.remove("is-mobile-menu-closing");
+  }, 260);
 }
 
 function openLanguageSheet(){
@@ -825,8 +858,8 @@ function openLanguageSheet(){
 
   let pendingLang = currentLang;
   layer.innerHTML = `
-    <div class="language-sheet-mask" role="presentation" data-close-language-sheet></div>
-    <section class="language-sheet" role="dialog" aria-modal="true" aria-labelledby="languageSheetTitle">
+    <div class="language-sheet-mask is-entering" role="presentation" data-close-language-sheet></div>
+    <section class="language-sheet is-entering" role="dialog" aria-modal="true" aria-labelledby="languageSheetTitle">
       <div class="language-sheet-handle" aria-hidden="true"></div>
       <div class="language-sheet-head">
         <button class="language-sheet-close" type="button" aria-label="${escapeHtml(t("closeLanguageLabel"))}" data-close-language-sheet>
@@ -853,6 +886,12 @@ function openLanguageSheet(){
     </section>`;
 
   const saveButton = layer.querySelector("[data-save-language]");
+  const sheet = layer.querySelector(".language-sheet");
+  const mask = layer.querySelector(".language-sheet-mask");
+  requestAnimationFrame(() => {
+    sheet?.classList.remove("is-entering");
+    mask?.classList.remove("is-entering");
+  });
   const updateSheetState = () => {
     layer.querySelectorAll("[data-lang-sheet-option]").forEach(button => {
       button.classList.toggle("is-selected", button.dataset.langSheetOption === pendingLang);
@@ -872,7 +911,7 @@ function openLanguageSheet(){
   });
 
   layer.querySelectorAll("[data-close-language-sheet]").forEach(button => {
-    button.onclick = closeModal;
+    button.onclick = closeLanguageSheet;
   });
 
   if(saveButton){
@@ -880,7 +919,7 @@ function openLanguageSheet(){
       if(pendingLang !== currentLang){
         changeLanguage(pendingLang);
       }
-      closeModal();
+      closeLanguageSheet();
     };
   }
 }
@@ -917,6 +956,158 @@ function renderUsefulLinks(){
         <a class="site-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}</a>
       `).join("")}
     </div>`;
+}
+
+function renderSearchPanelContent(){
+  if(searchQuery){
+    const matches = findQuestionMatches(searchQuery);
+    return matches.length > 0
+      ? `
+        <div class="search-section">
+          <div class="search-section-title">${escapeHtml(t("searchResults"))}</div>
+          <div class="search-result-list">
+            ${matches.map(match => {
+              const detail = getMatchDetail(match);
+              return `
+                <button class="search-result-item" type="button" data-search-biz="${escapeHtml(match.biz)}" data-search-aspect="${escapeHtml(match.aspect)}" data-search-topic="${escapeHtml(match.topic)}" data-search-idx="${match.idx}">
+                  <span class="search-result-question">${escapeHtml(detail.question)}</span>
+                  <span class="search-result-meta">${escapeHtml(detail.bizLabel)} / ${escapeHtml(detail.aspectLabel)} / ${escapeHtml(detail.categoryLabel)}</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>`
+      : `
+        <div class="search-section">
+          <button class="search-no-result" type="button" data-search-contact>
+            ${escapeHtml(t("noSearchResults"))}
+          </button>
+        </div>`;
+  }
+
+  return `
+    <div class="search-section">
+      <div class="search-section-title">${escapeHtml(t("popularKeywords"))}</div>
+      <div class="keyword-tags">
+        ${SEARCH_KEYWORDS.map(keyword => `
+          <button class="keyword-tag" type="button" data-keyword-query="${escapeHtml(localize(keyword.query))}">
+            ${escapeHtml(localize(keyword.label))}
+          </button>
+        `).join("")}
+      </div>
+    </div>
+    <div class="search-section">
+      <div class="search-section-title">${escapeHtml(t("recentSearches"))}</div>
+      <div class="recent-searches">
+        ${recentSearches.map(query => `
+          <button class="keyword-tag recent-search-tag" type="button" data-recent-query="${escapeHtml(query)}">
+            ${escapeHtml(query)}
+          </button>
+        `).join("")}
+      </div>
+    </div>`;
+}
+
+function bindSearchPanelEvents(container){
+  if(!container){
+    return;
+  }
+
+  container.querySelectorAll("[data-keyword-query]").forEach(button => {
+    button.onclick = () => {
+      commitSearch(button.dataset.keywordQuery);
+      if(!button.closest("#mobileMenuLayer")){
+        openSearchDropdown();
+      }
+    };
+  });
+
+  container.querySelectorAll("[data-recent-query]").forEach(button => {
+    button.onclick = () => {
+      commitSearch(button.dataset.recentQuery);
+      if(!button.closest("#mobileMenuLayer")){
+        openSearchDropdown();
+      }
+    };
+  });
+
+  container.querySelectorAll("[data-search-biz][data-search-aspect][data-search-topic][data-search-idx]").forEach(button => {
+    button.onclick = () => {
+      const shouldCloseMenu = Boolean(button.closest("#mobileMenuLayer"));
+      recordRecentSearch(searchQuery);
+      closeSearchDropdown();
+      jumpToAnswer(button.dataset.searchBiz, button.dataset.searchAspect, button.dataset.searchTopic, Number(button.dataset.searchIdx));
+      if(shouldCloseMenu){
+        closeMobileMenu();
+      }
+    };
+  });
+
+  container.querySelectorAll("[data-search-contact]").forEach(button => {
+    button.onclick = () => {
+      recordRecentSearch(searchQuery);
+      closeSearchDropdown();
+      openContactModal();
+      if(button.closest("#mobileMenuLayer")){
+        closeMobileMenu();
+      }
+    };
+  });
+}
+
+function renderMobileSearchPanel(){
+  return `
+    <section class="mobile-menu-section mobile-search-section">
+      <div class="mobile-search-wrap">
+        <div class="search-box mobile-search-box">
+          <input id="mobileKeywordSearch" class="keyword-search mobile-keyword-search" type="search" placeholder="${escapeHtml(t("searchPlaceholder"))}" value="${escapeHtml(searchQuery)}" autocomplete="off">
+          <button class="search-icon-btn mobile-search-submit" type="button" aria-label="${escapeHtml(t("searchLabel"))}"></button>
+        </div>
+        <div class="mobile-search-results" id="mobileSearchResults">
+          ${renderSearchPanelContent()}
+        </div>
+      </div>
+    </section>`;
+}
+
+function renderMobileSearchResultsOnly(){
+  const results = document.getElementById("mobileSearchResults");
+  if(!results){
+    return;
+  }
+  results.innerHTML = renderSearchPanelContent();
+  bindSearchPanelEvents(results);
+}
+
+function bindMobileSearchEvents(){
+  const mobileInput = document.getElementById("mobileKeywordSearch");
+  if(!mobileInput){
+    return;
+  }
+
+  const runMobileSearch = () => {
+    commitSearch(mobileInput.value);
+  };
+
+  mobileInput.placeholder = t("searchPlaceholder");
+  mobileInput.oninput = event => {
+    searchQuery = String(event.target.value || "").trim();
+    renderMobileSearchResultsOnly();
+  };
+  mobileInput.onkeydown = event => {
+    if(event.key === "Enter"){
+      event.preventDefault();
+      runMobileSearch();
+    }
+  };
+
+  const submitButton = document.querySelector(".mobile-search-submit");
+  if(submitButton){
+    submitButton.setAttribute("aria-label", t("searchLabel"));
+    submitButton.onclick = runMobileSearch;
+  }
+
+  renderMobileSearchResultsOnly();
 }
 
 function renderBizPanel(){
@@ -1085,6 +1276,7 @@ function renderMobileMenu(){
   layer.innerHTML = `
     <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
     <aside class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-labelledby="mobileMenuTitle">
+      <div class="mobile-sheet-handle" aria-hidden="true"></div>
       <div class="mobile-menu-top">
         <button class="mobile-menu-close" type="button" aria-label="${escapeHtml(t("closeMenuLabel"))}" data-mobile-menu-close>
           <span></span>
@@ -1093,6 +1285,7 @@ function renderMobileMenu(){
         <h2 id="mobileMenuTitle">${escapeHtml(t("mobileMenuTitle"))}</h2>
       </div>
       <div class="mobile-menu-content">
+        ${renderMobileSearchPanel()}
         <section class="mobile-menu-section">
           <h3 class="mobile-section-title">${escapeHtml(t("mobileBizTitle"))}</h3>
           <div class="mobile-menu-card">
@@ -1126,83 +1319,8 @@ function renderSearchDropdown(){
     return;
   }
 
-  if(searchQuery){
-    const matches = findQuestionMatches(searchQuery);
-    dropdown.innerHTML = matches.length > 0
-      ? `
-        <div class="search-section">
-          <div class="search-section-title">${escapeHtml(t("searchResults"))}</div>
-          <div class="search-result-list">
-            ${matches.map(match => {
-              const detail = getMatchDetail(match);
-              return `
-                <button class="search-result-item" type="button" data-search-biz="${escapeHtml(match.biz)}" data-search-aspect="${escapeHtml(match.aspect)}" data-search-topic="${escapeHtml(match.topic)}" data-search-idx="${match.idx}">
-                  <span class="search-result-question">${escapeHtml(detail.question)}</span>
-                  <span class="search-result-meta">${escapeHtml(detail.bizLabel)} / ${escapeHtml(detail.aspectLabel)} / ${escapeHtml(detail.categoryLabel)}</span>
-                </button>
-              `;
-            }).join("")}
-          </div>
-        </div>`
-      : `
-        <div class="search-section">
-          <button class="search-no-result" type="button" data-search-contact>
-            ${escapeHtml(t("noSearchResults"))}
-          </button>
-        </div>`;
-  }else{
-    dropdown.innerHTML = `
-      <div class="search-section">
-        <div class="search-section-title">${escapeHtml(t("popularKeywords"))}</div>
-        <div class="keyword-tags">
-          ${SEARCH_KEYWORDS.map(keyword => `
-            <button class="keyword-tag" type="button" data-keyword-query="${escapeHtml(localize(keyword.query))}">
-              ${escapeHtml(localize(keyword.label))}
-            </button>
-          `).join("")}
-        </div>
-      </div>
-      <div class="search-section">
-        <div class="search-section-title">${escapeHtml(t("recentSearches"))}</div>
-        <div class="recent-searches">
-          ${recentSearches.map(query => `
-            <button class="keyword-tag recent-search-tag" type="button" data-recent-query="${escapeHtml(query)}">
-              ${escapeHtml(query)}
-            </button>
-          `).join("")}
-        </div>
-      </div>`;
-  }
-
-  dropdown.querySelectorAll("[data-keyword-query]").forEach(button => {
-    button.onclick = () => {
-      commitSearch(button.dataset.keywordQuery);
-      openSearchDropdown();
-    };
-  });
-
-  dropdown.querySelectorAll("[data-recent-query]").forEach(button => {
-    button.onclick = () => {
-      commitSearch(button.dataset.recentQuery);
-      openSearchDropdown();
-    };
-  });
-
-  dropdown.querySelectorAll("[data-search-biz][data-search-aspect][data-search-topic][data-search-idx]").forEach(button => {
-    button.onclick = () => {
-      recordRecentSearch(searchQuery);
-      closeSearchDropdown();
-      jumpToAnswer(button.dataset.searchBiz, button.dataset.searchAspect, button.dataset.searchTopic, Number(button.dataset.searchIdx));
-    };
-  });
-
-  dropdown.querySelectorAll("[data-search-contact]").forEach(button => {
-    button.onclick = () => {
-      recordRecentSearch(searchQuery);
-      closeSearchDropdown();
-      openContactModal();
-    };
-  });
+  dropdown.innerHTML = renderSearchPanelContent();
+  bindSearchPanelEvents(dropdown);
 }
 
 function openSearchDropdown(){
@@ -1259,6 +1377,8 @@ function bindAppEvents(){
   document.querySelectorAll("[data-mobile-menu-close]").forEach(button => {
     button.onclick = closeMobileMenu;
   });
+
+  bindMobileSearchEvents();
 }
 
 function bindChromeEvents(){

@@ -4,9 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css?v=20260805-mobile-menu">
+<link rel="stylesheet" href="./css/style.css?v=20260805-mobile-sheet">
 </head>
 <body>
+
+<div class="app-splash" id="appSplash" aria-hidden="true">
+  <div class="splash-brand">
+    <span class="splash-text splash-bank">OO銀行</span>
+    <span class="splash-divider"></span>
+    <span class="splash-text splash-product">AML Buddy</span>
+  </div>
+</div>
 
 <header class="topbar">
   <div class="topbar-inner">
@@ -20,7 +28,10 @@
       <div class="logo-slot">
         <img src="./assets/tree-logo.svg" alt="OO銀行 xxxx Bank">
         <span class="bank-text">
-          <span class="bank-name">OO銀行</span>
+          <span class="bank-name">
+            <span class="desktop-bank-name">OO銀行</span>
+            <span class="mobile-bank-name">AML Buddy</span>
+          </span>
           <span class="bank-name-en">xxxx Bank</span>
         </span>
       </div>
@@ -69,9 +80,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js?v=20260805-mobile-menu"></script>
-<script src="./js/data.js?v=20260805-mobile-menu"></script>
-<script src="./js/translations.js?v=20260805-mobile-menu"></script>
-<script src="./js/app.js?v=20260805-mobile-menu"></script>
+<script src="./vendor/supabase-js.js?v=20260805-mobile-sheet"></script>
+<script src="./js/data.js?v=20260805-mobile-sheet"></script>
+<script src="./js/translations.js?v=20260805-mobile-sheet"></script>
+<script src="./js/app.js?v=20260805-mobile-sheet"></script>
 </body>
 </html>
