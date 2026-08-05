@@ -186,6 +186,7 @@ const API_BASE = window.location.protocol === "file:" ? `http://127.0.0.1:${wind
 const API_FAQS_URL = API_BASE + "/api/faqs?status=published&format=full";
 const API_REFRESH_MS = 5000;
 const ADMIN_STORAGE_KEY = "amlBuddyAdminOfficialFaqs.v3";
+const OFFICIAL_FAQ_ATTACHMENT_LINK = "https://www.google.com/";
 
 let activeDB = DB;
 let activeFaqSignature = "";
@@ -243,6 +244,12 @@ function getOfficialSourceNoFromId(id){
   const numeric = Number(match[1]);
   if(!Number.isInteger(numeric) || numeric < 1 || numeric > 50) return "";
   return String(numeric);
+}
+
+function getFaqAttachmentLink(faq){
+  return getOfficialSourceNoFromId(faq?.id)
+    ? OFFICIAL_FAQ_ATTACHMENT_LINK
+    : faq?.link || "";
 }
 
 function applyFaqItemTranslations(item, faq){
@@ -312,7 +319,7 @@ function buildDbFromFaqs(faqs){
       id:faq.id || "",
       sourceNo:"",
       revisionDate:faq.updated || faq.effective || REVISION_DATE,
-      link:faq.link || "",
+      link:getFaqAttachmentLink(faq),
       q:normalizeLocalizedObject(faq.q, faq.question),
       a:normalizeLocalizedObject(faq.a, faq.answer),
       ref:normalizeLocalizedObject(faq.ref, faq.reference)

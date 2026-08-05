@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // Official AML Buddy question bank imported from 0728修_Q&A.ods.
 // Generated on 2026-07-28. Subcategory is intentionally ignored for grouping.
 // ============================================================
@@ -114,6 +114,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  1,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如何判斷非自然人客戶的實質受益人（UBO）？"
                                                                                                                     },
@@ -127,6 +128,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  2,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "總行規定高風險、中風險及低風險客戶多久要做一次定期審查？"
                                                                                                                     },
@@ -140,6 +142,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  3,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "哪些情況下客戶屬於本行禁止往來客戶？"
                                                                                                                     },
@@ -153,6 +156,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  4,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶定審時是否需重新向客戶索取所有文件？"
                                                                                                                     },
@@ -166,6 +170,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  5,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "公司已發行無記名股份，可以開戶嗎？"
                                                                                                                     },
@@ -179,6 +184,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  6,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "什麼情況需要執行加強客戶審查（EDD）？"
                                                                                                                     },
@@ -192,6 +198,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  7,
                                                                                                               "revisionDate":  "未載明",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如何計算自然人的直接、間接累計持股比例，以判斷是否為實質受益人？"
                                                                                                                     },
@@ -205,6 +212,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  8,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "哪些主體可以不用辨識實質受益人?"
                                                                                                                     },
@@ -218,6 +226,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  9,
                                                                                                               "revisionDate":  "未載明",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "什麼情況下，持股未超過25%的人仍可能被認定為實質受益人？"
                                                                                                                     },
@@ -231,6 +240,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  10,
                                                                                                               "revisionDate":  "未載明",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "可以透過哪些文件瞭解非自然人客戶的股權結構？"
                                                                                                                     },
@@ -244,6 +254,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  11,
                                                                                                               "revisionDate":  "未載明",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶審查程序為何？*更具體"
                                                                                                                     },
@@ -257,6 +268,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  12,
                                                                                                               "revisionDate":  "2026-02-02",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "既有客戶若在定期審查時不配合或無法聯絡應如何處理？\n*實務"
                                                                                                                     },
@@ -270,6 +282,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  13,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶以代理人辦理業務時，應確認哪些事項？"
                                                                                                                     },
@@ -283,6 +296,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  14,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如客戶來自禁止往來國家，但已取得我國籍，或持有本國居留證／工作證，應如何判斷其風險？"
                                                                                                                     },
@@ -296,6 +310,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  15,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶風險等級由低/中風險變更為高風險，是否須執行EDD？"
                                                                                                                     },
@@ -309,6 +324,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  17,
                                                                                                               "revisionDate":  "未載明",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "哪些產業屬於敏感性行業？"
                                                                                                                     },
@@ -322,6 +338,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  18,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "總行規定哪些情況應婉拒建立業務關係或交易？"
                                                                                                                     },
@@ -335,6 +352,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  20,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "哪些客戶屬於本行指定的「特殊性質客戶」？"
                                                                                                                     },
@@ -348,6 +366,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  32,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如何判斷 PEP 的 RCA？"
                                                                                                                     },
@@ -361,6 +380,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  33,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "PEP 家庭成員範疇?"
                                                                                                                     },
@@ -374,6 +394,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  34,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如何判斷離職或卸任逾一年 PEP 之實質影響力?"
                                                                                                                     },
@@ -387,6 +408,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  35,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶為分公司或辦事處等分支機構時，應如何辨別實質受益人?"
                                                                                                                     },
@@ -400,6 +422,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  36,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "辨識實質受益人時，若客戶的直接股東為非自然人，辨識所有權結構應追查到什麼程度？"
                                                                                                                     },
@@ -413,6 +436,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  37,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如發現客戶之關聯人為本行禁止往來客戶，是否得與該客戶進行業務往來？"
                                                                                                                     },
@@ -426,6 +450,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  38,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶之關聯人包含哪些？"
                                                                                                                     },
@@ -439,6 +464,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  39,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "客戶為法人、團體或信託之受託人時，應向其取得哪些書面文件，以確實執行 KYC？"
                                                                                                                     },
@@ -452,6 +478,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  42,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "何為空殼公司（Shell Company）？發現客戶為空殼公司時應如何處理？"
                                                                                                                     },
@@ -465,6 +492,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  43,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "實質受益人持股比例剛好25%算嗎？"
                                                                                                                     },
@@ -478,6 +506,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  44,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "本行原則上將「現金服務業者（MSB）」列為禁止往來戶。若國外分子行因特殊業務需求需開立此類客戶，其簽核與核准程序為何？"
                                                                                                                     },
@@ -491,6 +520,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  45,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "營業單位若在 KYC 過程中，發現客戶涉及重大犯罪或負面新聞，但系統當時並未提示警報時，應如何調高其風險評級？"
                                                                                                                     },
@@ -504,6 +534,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  46,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "什麼情況下外國公司可豁免辨識實質受益人？"
                                                                                                                     },
@@ -517,6 +548,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  47,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "當法人客戶或其股權結構中之主體，同時設有「有表決權」與「無表決權」之股份時，在辨識與確認實質受益人時，應如何處理其持股比例之計算？"
                                                                                                                     },
@@ -530,6 +562,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  48,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "若法人客戶持有「庫藏股」或「自己間接持有自己股份」之情形，在繪製股權結構圖並計算實質受益人持股比例時，此部分股份應如何計算？"
                                                                                                                     },
@@ -543,6 +576,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  49,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "在判斷客戶是否有「其他控制權人」時，若發現某自然人依契約、章程或實際狀況對公司具有重大決策權或否決權，但其身分為「律師、會計師或法院選任之破產管理人」，原則上應如何判定其是否為控制權人？有何例外？"
                                                                                                                     },
@@ -556,6 +590,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  50,
                                                                                                               "revisionDate":  "2026-03-27",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "當法人客戶無直接或間接累計持股超過 25% 之最終自然人時，應如何辨識「透過其他方式對客戶行使控制權之自然人」？"
                                                                                                                     },
@@ -569,6 +604,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  16,
                                                                                                               "revisionDate":  "未載明",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "如客戶來自高洗錢及資恐風險區域，是否須執行EDD？"
                                                                                                                     },
@@ -603,6 +639,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  19,
                                                                                                                           "revisionDate":  "2026-03-27",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "如果客戶命中制裁名單，銀行應如何處理？"
                                                                                                                                 },
@@ -616,6 +653,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  23,
                                                                                                                           "revisionDate":  "2025-07-18",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "當系統掃描出警報時，應再採取哪些檢視措施，以確認是否真實命中？"
                                                                                                                                 },
@@ -629,6 +667,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  24,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "得知客戶疑似涉及規避制裁且風險較高時，應採取哪些管控措施？"
                                                                                                                                 },
@@ -642,6 +681,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  25,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "客戶如有涉及紅旗警示的行為，應如何處理?"
                                                                                                                                 },
@@ -655,6 +695,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  26,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "俄羅斯制裁規避紅旗警示的態樣有哪些？"
                                                                                                                                 },
@@ -668,6 +709,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  27,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "哪些客戶會被列為具俄羅斯制裁風險客戶？"
                                                                                                                                 },
@@ -681,6 +723,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  28,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "假設客戶辦理直接涉及俄羅斯之交易，應如何辦理？"
                                                                                                                                 },
@@ -694,6 +737,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  29,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "哪些交易會被認定為「可能間接涉及俄羅斯之交易」？發現這類交易時應如何處理？"
                                                                                                                                 },
@@ -707,6 +751,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  30,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "哪些國家屬於轉運俄羅斯高風險國家？"
                                                                                                                                 },
@@ -720,6 +765,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  31,
                                                                                                                           "revisionDate":  "2024-12-17",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "對具俄羅斯制裁風險客戶之出口融資交易應進行哪些航程盡職調查？"
                                                                                                                                 },
@@ -765,6 +811,7 @@ const DB = {
                                                                                                                        {
                                                                                                                            "sourceNo":  21,
                                                                                                                            "revisionDate":  "2025-10-03",
+                                                                                                                           "link":  "https://www.google.com/",
                                                                                                                            "q":  {
                                                                                                                                      "zh":  "哪些 AML/CFT 事件須立即通報總（母）行？"
                                                                                                                                  },
@@ -778,6 +825,7 @@ const DB = {
                                                                                                                        {
                                                                                                                            "sourceNo":  22,
                                                                                                                            "revisionDate":  "2025-07-18",
+                                                                                                                           "link":  "https://www.google.com/",
                                                                                                                            "q":  {
                                                                                                                                      "zh":  "國外分支機構的名單設定是否必須完全比照總行？"
                                                                                                                                  },
@@ -801,6 +849,7 @@ const DB = {
                                                                                                            {
                                                                                                                "sourceNo":  40,
                                                                                                                "revisionDate":  "2025-10-03",
+                                                                                                               "link":  "https://www.google.com/",
                                                                                                                "q":  {
                                                                                                                          "zh":  "本地主管機關或相關單位未舉辦防制洗錢及打擊資恐教育訓練要怎麼辦？"
                                                                                                                      },
@@ -814,6 +863,7 @@ const DB = {
                                                                                                            {
                                                                                                                "sourceNo":  41,
                                                                                                                "revisionDate":  "2025-10-03",
+                                                                                                               "link":  "https://www.google.com/",
                                                                                                                "q":  {
                                                                                                                          "zh":  "國外分支機構防制洗錢及打擊資恐督導主管、主管及專責人員每年至少應參加幾小時AML/CFT教育訓練？"
                                                                                                                      },
@@ -975,6 +1025,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  2,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "總行規定高風險、中風險及低風險客戶多久要做一次定期審查？"
                                                                                                                    },
@@ -988,6 +1039,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  3,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "哪些情況下客戶屬於本行禁止往來客戶？"
                                                                                                                    },
@@ -1001,6 +1053,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  4,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "客戶定審時是否需重新向客戶索取所有文件？"
                                                                                                                    },
@@ -1014,6 +1067,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  5,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "公司已發行無記名股份，可以開戶嗎？"
                                                                                                                    },
@@ -1027,6 +1081,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  6,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "什麼情況需要執行加強客戶審查（EDD）？"
                                                                                                                    },
@@ -1040,6 +1095,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  11,
                                                                                                              "revisionDate":  "未載明",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "客戶審查程序為何？*更具體"
                                                                                                                    },
@@ -1053,6 +1109,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  12,
                                                                                                              "revisionDate":  "2026-02-02",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "既有客戶若在定期審查時不配合或無法聯絡應如何處理？\n*實務"
                                                                                                                    },
@@ -1066,6 +1123,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  13,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "客戶以代理人辦理業務時，應確認哪些事項？"
                                                                                                                    },
@@ -1079,6 +1137,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  14,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "如客戶來自禁止往來國家，但已取得我國籍，或持有本國居留證／工作證，應如何判斷其風險？"
                                                                                                                    },
@@ -1092,6 +1151,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  15,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "客戶風險等級由低/中風險變更為高風險，是否須執行EDD？"
                                                                                                                    },
@@ -1105,6 +1165,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  17,
                                                                                                              "revisionDate":  "未載明",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "哪些產業屬於敏感性行業？"
                                                                                                                    },
@@ -1118,6 +1179,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  18,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "總行規定哪些情況應婉拒建立業務關係或交易？"
                                                                                                                    },
@@ -1131,6 +1193,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  20,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "哪些客戶屬於本行指定的「特殊性質客戶」？"
                                                                                                                    },
@@ -1144,6 +1207,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  32,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "如何判斷 PEP 的 RCA？"
                                                                                                                    },
@@ -1157,6 +1221,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  33,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "PEP 家庭成員範疇?"
                                                                                                                    },
@@ -1170,6 +1235,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  34,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "如何判斷離職或卸任逾一年 PEP 之實質影響力?"
                                                                                                                    },
@@ -1183,6 +1249,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  37,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "如發現客戶之關聯人為本行禁止往來客戶，是否得與該客戶進行業務往來？"
                                                                                                                    },
@@ -1196,6 +1263,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  38,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "客戶之關聯人包含哪些？"
                                                                                                                    },
@@ -1209,6 +1277,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  45,
                                                                                                              "revisionDate":  "2026-03-27",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "營業單位若在 KYC 過程中，發現客戶涉及重大犯罪或負面新聞，但系統當時並未提示警報時，應如何調高其風險評級？"
                                                                                                                    },
@@ -1222,6 +1291,7 @@ const DB = {
                                                                                                          {
                                                                                                              "sourceNo":  16,
                                                                                                              "revisionDate":  "未載明",
+                                                                                                             "link":  "https://www.google.com/",
                                                                                                              "q":  {
                                                                                                                        "zh":  "如客戶來自高洗錢及資恐風險區域，是否須執行EDD？"
                                                                                                                    },
@@ -1256,6 +1326,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  19,
                                                                                                                          "revisionDate":  "2026-03-27",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "如果客戶命中制裁名單，銀行應如何處理？"
                                                                                                                                },
@@ -1269,6 +1340,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  23,
                                                                                                                          "revisionDate":  "2025-07-18",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "當系統掃描出警報時，應再採取哪些檢視措施，以確認是否真實命中？"
                                                                                                                                },
@@ -1282,6 +1354,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  24,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "得知客戶疑似涉及規避制裁且風險較高時，應採取哪些管控措施？"
                                                                                                                                },
@@ -1295,6 +1368,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  25,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "客戶如有涉及紅旗警示的行為，應如何處理?"
                                                                                                                                },
@@ -1308,6 +1382,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  26,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "俄羅斯制裁規避紅旗警示的態樣有哪些？"
                                                                                                                                },
@@ -1321,6 +1396,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  27,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "哪些客戶會被列為具俄羅斯制裁風險客戶？"
                                                                                                                                },
@@ -1334,6 +1410,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  28,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "假設客戶辦理直接涉及俄羅斯之交易，應如何辦理？"
                                                                                                                                },
@@ -1347,6 +1424,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  29,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "哪些交易會被認定為「可能間接涉及俄羅斯之交易」？發現這類交易時應如何處理？"
                                                                                                                                },
@@ -1360,6 +1438,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  30,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "哪些國家屬於轉運俄羅斯高風險國家？"
                                                                                                                                },
@@ -1373,6 +1452,7 @@ const DB = {
                                                                                                                      {
                                                                                                                          "sourceNo":  31,
                                                                                                                          "revisionDate":  "2024-12-17",
+                                                                                                                         "link":  "https://www.google.com/",
                                                                                                                          "q":  {
                                                                                                                                    "zh":  "對具俄羅斯制裁風險客戶之出口融資交易應進行哪些航程盡職調查？"
                                                                                                                                },
@@ -1418,6 +1498,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  21,
                                                                                                                           "revisionDate":  "2025-10-03",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "哪些 AML/CFT 事件須立即通報總（母）行？"
                                                                                                                                 },
@@ -1431,6 +1512,7 @@ const DB = {
                                                                                                                       {
                                                                                                                           "sourceNo":  22,
                                                                                                                           "revisionDate":  "2025-07-18",
+                                                                                                                          "link":  "https://www.google.com/",
                                                                                                                           "q":  {
                                                                                                                                     "zh":  "國外分支機構的名單設定是否必須完全比照總行？"
                                                                                                                                 },
@@ -1454,6 +1536,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  40,
                                                                                                               "revisionDate":  "2025-10-03",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "本地主管機關或相關單位未舉辦防制洗錢及打擊資恐教育訓練要怎麼辦？"
                                                                                                                     },
@@ -1467,6 +1550,7 @@ const DB = {
                                                                                                           {
                                                                                                               "sourceNo":  41,
                                                                                                               "revisionDate":  "2025-10-03",
+                                                                                                              "link":  "https://www.google.com/",
                                                                                                               "q":  {
                                                                                                                         "zh":  "國外分支機構防制洗錢及打擊資恐督導主管、主管及專責人員每年至少應參加幾小時AML/CFT教育訓練？"
                                                                                                                     },
