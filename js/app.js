@@ -1434,14 +1434,15 @@ function renderAnswerPanel(){
   }
 
   const panelHeadHtml = selectedQuestion
-    ? `<button class="answer-back-btn" type="button" data-answer-back>${escapeHtml(t("answerBack"))}</button>`
-    : `<h2 class="panel-title">${escapeHtml(t("answerPanelTitle"))}</h2>`;
+    ? `
+      <div class="panel-head">
+        <button class="answer-back-btn" type="button" data-answer-back>${escapeHtml(t("answerBack"))}</button>
+      </div>`
+    : "";
 
   return `
     <section class="app-panel answer-panel">
-      <div class="panel-head">
-        ${panelHeadHtml}
-      </div>
+      ${panelHeadHtml}
       <div class="panel-body">
         <div class="answer-shell">${answerHtml}</div>
       </div>
