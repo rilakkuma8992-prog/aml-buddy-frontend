@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css?v=20260805-header-icons-v3">
+<link rel="stylesheet" href="./css/style.css?v=20260805-header-links-v4">
 </head>
 <body>
 
@@ -57,7 +57,10 @@
       </div>
 
       <button class="mobile-nav-btn mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-expanded="false">
-        <span class="mobile-sites-icon" aria-hidden="true"><span></span></span>
+        <svg class="mobile-sites-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.6 1.6"></path>
+          <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.6-1.6"></path>
+        </svg>
       </button>
 
       <div class="language-switch" aria-label="語言切換">
@@ -67,7 +70,6 @@
         <span aria-hidden="true">／</span>
         <button class="language-option" type="button" data-lang-option="ja">日</button>
         <button class="mobile-language-trigger" id="mobileLanguageButton" type="button" aria-haspopup="dialog" aria-expanded="false">
-          <span class="language-globe" aria-hidden="true"></span>
           <span id="mobileLanguageLabel">ZH</span>
         </button>
       </div>
@@ -94,9 +96,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js?v=20260805-header-icons-v3"></script>
-<script src="./js/data.js?v=20260805-header-icons-v3"></script>
-<script src="./js/translations.js?v=20260805-header-icons-v3"></script>
-<script src="./js/app.js?v=20260805-header-icons-v3"></script>
+<script src="./vendor/supabase-js.js?v=20260805-header-links-v4"></script>
+<script src="./js/data.js?v=20260805-header-links-v4"></script>
+<script src="./js/translations.js?v=20260805-header-links-v4"></script>
+<script src="./js/app.js?v=20260805-header-links-v4"></script>
 </body>
 </html>

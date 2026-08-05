@@ -34,7 +34,7 @@ const USEFUL_LINKS = [
 const LANGUAGE_OPTIONS = [
   {id:"zh", short:"ZH", label:{zh:"中文", en:"Chinese", ja:"中国語"}},
   {id:"en", short:"EN", label:{zh:"English", en:"English", ja:"英語"}},
-  {id:"ja", short:"JA", label:{zh:"日本語", en:"Japanese", ja:"日本語"}}
+  {id:"ja", short:"JP", label:{zh:"日本語", en:"Japanese", ja:"日本語"}}
 ];
 
 const UI_TEXT = {

@@ -224,42 +224,15 @@ button{
 }
 
 .mobile-sites-icon{
-  position:relative;
   width:28px;
   height:28px;
+  display:block;
   opacity:.76;
-}
-
-.mobile-sites-icon::before,
-.mobile-sites-icon::after{
-  content:"";
-  position:absolute;
-  top:9px;
-  width:16px;
-  height:9px;
-  border:3px solid currentColor;
-  border-radius:999px;
-  background:transparent;
-  transform:rotate(-35deg);
-}
-
-.mobile-sites-icon::before{
-  left:1px;
-}
-
-.mobile-sites-icon::after{
-  right:1px;
-}
-
-.mobile-sites-icon span{
-  position:absolute;
-  left:9px;
-  top:12px;
-  width:10px;
-  height:4px;
-  border-radius:999px;
-  background:#fff;
-  transform:rotate(-35deg);
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.75;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
 
 .mobile-nav-text{
@@ -304,47 +277,17 @@ button{
 }
 
 .mobile-language-trigger{
-  min-width:76px;
-  height:44px;
+  width:44px;
+  min-width:44px;
+  height:42px;
   align-items:center;
-  justify-content:flex-end;
-  gap:8px;
+  justify-content:center;
+  flex:0 0 44px;
   padding:0;
   color:#555f59;
   font-size:17px;
   font-weight:800;
   letter-spacing:0;
-}
-
-.language-globe{
-  position:relative;
-  width:31px;
-  height:31px;
-  flex:0 0 31px;
-  border:3px solid currentColor;
-  border-radius:50%;
-  opacity:.76;
-}
-
-.language-globe::before{
-  content:"";
-  position:absolute;
-  inset:3px 9px;
-  border-left:2.5px solid currentColor;
-  border-right:2.5px solid currentColor;
-  border-radius:50%;
-}
-
-.language-globe::after{
-  content:"";
-  position:absolute;
-  left:4px;
-  right:4px;
-  top:50%;
-  height:2.5px;
-  border-radius:999px;
-  background:currentColor;
-  transform:translateY(-50%);
 }
 
 .search-wrap{
@@ -1647,12 +1590,19 @@ button{
   }
 
   .answer-panel .panel-body{
+    display:flex;
+    flex-direction:column;
     overflow:visible;
-    padding:14px;
+    padding:14px 14px 0;
+  }
+
+  .answer-shell{
+    flex:1;
+    width:100%;
   }
 
   .answer-empty{
-    min-height:42svh;
+    min-height:100%;
     padding:20px;
     font-size:14px;
   }
@@ -2146,14 +2096,10 @@ button{
   }
 
   .mobile-language-trigger{
-    min-width:66px;
+    width:39px;
+    min-width:39px;
+    flex-basis:39px;
     font-size:15px;
-  }
-
-  .language-globe{
-    width:28px;
-    height:28px;
-    flex-basis:28px;
   }
 
   .mobile-header-keyword-search{
