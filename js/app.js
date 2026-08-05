@@ -47,6 +47,7 @@ const UI_TEXT = {
     mobileBizTitle:"業務別",
     mobileFaqTitle:"常見問題",
     searchLabel:"搜尋",
+    closeSearchLabel:"關閉搜尋",
     searchPlaceholder:"實質受益人",
     searchResults:"符合問題",
     noSearchResults:"查無符合的問題，請洽洗防窗口",
@@ -54,8 +55,6 @@ const UI_TEXT = {
     recentSearches:"最近搜尋",
     chooseBiz:"請選擇業務別",
     usefulSites:"常用網站",
-    questionMenuTop:"問題",
-    questionMenuBottom:"選單",
     usefulSitesTop:"常用",
     usefulSitesBottom:"網站",
     chooseQuestionCta:"選擇問題",
@@ -66,6 +65,7 @@ const UI_TEXT = {
     collapseAll:"全部收合",
     emptyCategory:"此分類目前尚無常見問題",
     answerPanelTitle:"答案",
+    answerBack:"返回",
     emptyAnswer:"請選擇您的問題",
     refLabel:"參考",
     revisionDate:"最後修訂日期",
@@ -92,6 +92,7 @@ const UI_TEXT = {
     mobileBizTitle:"Business Line",
     mobileFaqTitle:"FAQs",
     searchLabel:"Search",
+    closeSearchLabel:"Close search",
     searchPlaceholder:"Beneficial owner",
     searchResults:"Matching Questions",
     noSearchResults:"No matching questions. Contact the AML office",
@@ -99,8 +100,6 @@ const UI_TEXT = {
     recentSearches:"Recent Searches",
     chooseBiz:"Select Business Line",
     usefulSites:"Useful Sites",
-    questionMenuTop:"Question",
-    questionMenuBottom:"Menu",
     usefulSitesTop:"Useful",
     usefulSitesBottom:"Sites",
     chooseQuestionCta:"Select Question",
@@ -111,6 +110,7 @@ const UI_TEXT = {
     collapseAll:"Collapse all",
     emptyCategory:"No frequently asked questions in this category yet.",
     answerPanelTitle:"Answer",
+    answerBack:"Back",
     emptyAnswer:"Please select a question.",
     refLabel:"Reference",
     revisionDate:"Last Revision Date",
@@ -137,6 +137,7 @@ const UI_TEXT = {
     mobileBizTitle:"業務区分",
     mobileFaqTitle:"よくある質問",
     searchLabel:"検索",
+    closeSearchLabel:"検索を閉じる",
     searchPlaceholder:"実質的支配者",
     searchResults:"該当する質問",
     noSearchResults:"該当する質問がありません。AML窓口へお問い合わせください",
@@ -144,8 +145,6 @@ const UI_TEXT = {
     recentSearches:"最近の検索",
     chooseBiz:"業務区分を選択してください",
     usefulSites:"よく使うサイト",
-    questionMenuTop:"質問",
-    questionMenuBottom:"選択",
     usefulSitesTop:"便利",
     usefulSitesBottom:"サイト",
     chooseQuestionCta:"質問を選択",
@@ -156,6 +155,7 @@ const UI_TEXT = {
     collapseAll:"すべて閉じる",
     emptyCategory:"この分類には現在よくある質問がありません。",
     answerPanelTitle:"回答",
+    answerBack:"戻る",
     emptyAnswer:"質問を選択してください。",
     refLabel:"参考",
     revisionDate:"最終改訂日",
@@ -478,6 +478,7 @@ let isMobileMenuOpen = false;
 let mobileMenuCloseTimer = null;
 let isMobileSitesOpen = false;
 let mobileSitesCloseTimer = null;
+let isHeaderSearchOpen = false;
 let languageSheetCloseTimer = null;
 
 function t(key){
@@ -755,6 +756,13 @@ function jumpToAnswer(bizId, aspectId, topicId, idx){
   refreshUi();
 }
 
+function returnToQuestionStart(){
+  selectedQuestion = null;
+  closeHeaderSearch();
+  closeMobileMenu({instant:true});
+  refreshUi();
+}
+
 function applySearch(rawQuery, options = {}){
   searchQuery = String(rawQuery || "").trim();
 
@@ -842,15 +850,11 @@ function getLanguageOption(lang){
 
 function syncMobileMenuState(){
   document.body.classList.toggle("is-mobile-menu-open", isMobileMenuOpen);
-  const button = document.getElementById("mobileMenuButton");
-  if(button){
-    button.setAttribute("aria-expanded", String(isMobileMenuOpen));
-    button.setAttribute("aria-label", isMobileMenuOpen ? t("closeMenuLabel") : `${t("questionMenuTop")}${t("questionMenuBottom")}`);
-  }
 }
 
 function openMobileMenu(){
   closeMobileSitesDropdown({instant:true});
+  closeHeaderSearch();
   closeSearchDropdown();
   clearTimeout(mobileMenuCloseTimer);
   document.body.classList.remove("is-mobile-menu-closing");
@@ -887,6 +891,7 @@ function syncMobileSitesState(){
 
 function openMobileSitesDropdown(){
   closeMobileMenu({instant:true});
+  closeHeaderSearch();
   closeSearchDropdown();
   clearTimeout(mobileSitesCloseTimer);
   document.body.classList.remove("is-mobile-sites-closing");
@@ -913,9 +918,48 @@ function closeMobileSitesDropdown(options = {}){
   }, 220);
 }
 
+function syncHeaderSearchState(){
+  document.body.classList.toggle("is-header-search-open", isHeaderSearchOpen);
+  const button = document.getElementById("mobileHeaderSearchButton");
+  if(button){
+    button.setAttribute("aria-expanded", String(isHeaderSearchOpen));
+    button.setAttribute("aria-label", isHeaderSearchOpen ? t("closeSearchLabel") : t("searchLabel"));
+  }
+  const input = document.getElementById("mobileHeaderKeywordSearch");
+  if(input){
+    input.placeholder = t("searchPlaceholder");
+    input.value = searchQuery;
+  }
+  const closeButton = document.getElementById("mobileHeaderSearchClose");
+  if(closeButton){
+    closeButton.setAttribute("aria-label", t("closeSearchLabel"));
+  }
+}
+
+function openHeaderSearch(){
+  closeMobileMenu({instant:true});
+  closeMobileSitesDropdown({instant:true});
+  closeSearchDropdown();
+  isHeaderSearchOpen = true;
+  syncHeaderSearchState();
+  renderMobileHeaderSearchResultsOnly();
+  setTimeout(() => {
+    document.getElementById("mobileHeaderKeywordSearch")?.focus();
+  }, 0);
+}
+
+function closeHeaderSearch(){
+  if(!isHeaderSearchOpen){
+    return;
+  }
+  isHeaderSearchOpen = false;
+  syncHeaderSearchState();
+}
+
 function openLanguageSheet(){
   closeMobileSitesDropdown({instant:true});
   closeMobileMenu({instant:true});
+  closeHeaderSearch();
   const layer = document.getElementById("modalLayer");
   const mobileLanguageButton = document.getElementById("mobileLanguageButton");
   if(mobileLanguageButton){
@@ -1080,42 +1124,53 @@ function bindSearchPanelEvents(container){
   }
 
   container.querySelectorAll("[data-keyword-query]").forEach(button => {
-    button.onclick = () => {
+    button.onclick = event => {
+      event.stopPropagation();
       commitSearch(button.dataset.keywordQuery);
-      if(!button.closest("#mobileMenuLayer")){
+      if(!button.closest("#mobileMenuLayer") && !button.closest("#mobileHeaderSearch")){
         openSearchDropdown();
       }
     };
   });
 
   container.querySelectorAll("[data-recent-query]").forEach(button => {
-    button.onclick = () => {
+    button.onclick = event => {
+      event.stopPropagation();
       commitSearch(button.dataset.recentQuery);
-      if(!button.closest("#mobileMenuLayer")){
+      if(!button.closest("#mobileMenuLayer") && !button.closest("#mobileHeaderSearch")){
         openSearchDropdown();
       }
     };
   });
 
   container.querySelectorAll("[data-search-biz][data-search-aspect][data-search-topic][data-search-idx]").forEach(button => {
-    button.onclick = () => {
+    button.onclick = event => {
+      event.stopPropagation();
       const shouldCloseMenu = Boolean(button.closest("#mobileMenuLayer"));
+      const shouldCloseHeaderSearch = Boolean(button.closest("#mobileHeaderSearch"));
       recordRecentSearch(searchQuery);
       closeSearchDropdown();
       jumpToAnswer(button.dataset.searchBiz, button.dataset.searchAspect, button.dataset.searchTopic, Number(button.dataset.searchIdx));
       if(shouldCloseMenu){
         closeMobileMenu();
       }
+      if(shouldCloseHeaderSearch){
+        closeHeaderSearch();
+      }
     };
   });
 
   container.querySelectorAll("[data-search-contact]").forEach(button => {
-    button.onclick = () => {
+    button.onclick = event => {
+      event.stopPropagation();
       recordRecentSearch(searchQuery);
       closeSearchDropdown();
       openContactModal();
       if(button.closest("#mobileMenuLayer")){
         closeMobileMenu();
+      }
+      if(button.closest("#mobileHeaderSearch")){
+        closeHeaderSearch();
       }
     };
   });
@@ -1138,6 +1193,15 @@ function renderMobileSearchPanel(){
 
 function renderMobileSearchResultsOnly(){
   const results = document.getElementById("mobileSearchResults");
+  if(!results){
+    return;
+  }
+  results.innerHTML = renderSearchPanelContent();
+  bindSearchPanelEvents(results);
+}
+
+function renderMobileHeaderSearchResultsOnly(){
+  const results = document.getElementById("mobileHeaderSearchResults");
   if(!results){
     return;
   }
@@ -1174,6 +1238,39 @@ function bindMobileSearchEvents(){
   }
 
   renderMobileSearchResultsOnly();
+}
+
+function bindMobileHeaderSearchEvents(){
+  const input = document.getElementById("mobileHeaderKeywordSearch");
+  if(!input){
+    return;
+  }
+
+  const commitHeaderSearch = () => {
+    commitSearch(input.value);
+    renderMobileHeaderSearchResultsOnly();
+  };
+
+  input.placeholder = t("searchPlaceholder");
+  input.value = searchQuery;
+  input.oninput = event => {
+    searchQuery = String(event.target.value || "").trim();
+    renderMobileHeaderSearchResultsOnly();
+  };
+  input.onkeydown = event => {
+    if(event.key === "Enter"){
+      event.preventDefault();
+      commitHeaderSearch();
+    }
+  };
+
+  const closeButton = document.getElementById("mobileHeaderSearchClose");
+  if(closeButton){
+    closeButton.setAttribute("aria-label", t("closeSearchLabel"));
+    closeButton.onclick = closeHeaderSearch;
+  }
+
+  renderMobileHeaderSearchResultsOnly();
 }
 
 function renderBizPanel(){
@@ -1336,10 +1433,14 @@ function renderAnswerPanel(){
     }
   }
 
+  const panelHeadHtml = selectedQuestion
+    ? `<button class="answer-back-btn" type="button" data-answer-back>${escapeHtml(t("answerBack"))}</button>`
+    : `<h2 class="panel-title">${escapeHtml(t("answerPanelTitle"))}</h2>`;
+
   return `
     <section class="app-panel answer-panel">
       <div class="panel-head">
-        <h2 class="panel-title">${escapeHtml(t("answerPanelTitle"))}</h2>
+        ${panelHeadHtml}
       </div>
       <div class="panel-body">
         <div class="answer-shell">${answerHtml}</div>
@@ -1526,6 +1627,10 @@ function bindAppEvents(){
     button.onclick = () => toggleAllCategories();
   });
 
+  document.querySelectorAll("[data-answer-back]").forEach(button => {
+    button.onclick = returnToQuestionStart;
+  });
+
   document.querySelectorAll("[data-aspect][data-topic][data-idx]").forEach(button => {
     button.onclick = () => {
       const shouldCloseMenu = Boolean(button.closest("#mobileMenuLayer"));
@@ -1544,6 +1649,18 @@ function bindAppEvents(){
     button.onclick = openMobileMenu;
   });
 
+  const mobileHeaderSearchButton = document.getElementById("mobileHeaderSearchButton");
+  if(mobileHeaderSearchButton){
+    mobileHeaderSearchButton.onclick = event => {
+      event.stopPropagation();
+      if(isHeaderSearchOpen){
+        closeHeaderSearch();
+      }else{
+        openHeaderSearch();
+      }
+    };
+  }
+
   document.querySelectorAll("[data-mobile-sites-close]").forEach(button => {
     button.onclick = closeMobileSitesDropdown;
   });
@@ -1561,23 +1678,16 @@ function bindChromeEvents(){
     button.onclick = () => changeLanguage(button.dataset.langOption);
   });
 
-  const mobileMenuButton = document.getElementById("mobileMenuButton");
-  if(mobileMenuButton){
-    mobileMenuButton.onclick = () => {
-      if(isMobileMenuOpen){
-        closeMobileMenu();
+  const mobileHeaderSearchButton = document.getElementById("mobileHeaderSearchButton");
+  if(mobileHeaderSearchButton){
+    mobileHeaderSearchButton.onclick = event => {
+      event.stopPropagation();
+      if(isHeaderSearchOpen){
+        closeHeaderSearch();
       }else{
-        openMobileMenu();
+        openHeaderSearch();
       }
     };
-  }
-  const mobileMenuTopLabel = document.getElementById("mobileMenuTopLabel");
-  const mobileMenuBottomLabel = document.getElementById("mobileMenuBottomLabel");
-  if(mobileMenuTopLabel){
-    mobileMenuTopLabel.textContent = t("questionMenuTop");
-  }
-  if(mobileMenuBottomLabel){
-    mobileMenuBottomLabel.textContent = t("questionMenuBottom");
   }
 
   const mobileSitesButton = document.getElementById("mobileSitesButton");
@@ -1629,11 +1739,14 @@ function bindChromeEvents(){
     };
   }
 
-  const searchButton = document.querySelector(".search-icon-btn");
+  const searchButton = document.querySelector("#searchWrap .search-icon-btn");
   if(searchButton){
     searchButton.setAttribute("aria-label", t("searchLabel"));
     searchButton.onclick = () => commitSearch(searchInput?.value || "");
   }
+
+  syncHeaderSearchState();
+  bindMobileHeaderSearchEvents();
 }
 
 function renderChrome(){
@@ -1671,12 +1784,21 @@ document.addEventListener("click", event => {
   if(wrap && !wrap.contains(event.target)){
     closeSearchDropdown();
   }
+  const headerSearch = document.getElementById("mobileHeaderSearch");
+  const headerSearchButton = document.getElementById("mobileHeaderSearchButton");
+  if(isHeaderSearchOpen &&
+    headerSearch &&
+    !headerSearch.contains(event.target) &&
+    !headerSearchButton?.contains(event.target)){
+    closeHeaderSearch();
+  }
 });
 
 document.addEventListener("keydown", event => {
   if(event.key === "Escape"){
     closeMobileMenu();
     closeMobileSitesDropdown();
+    closeHeaderSearch();
     if(document.querySelector(".language-sheet")){
       closeLanguageSheet();
     }

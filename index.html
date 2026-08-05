@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css?v=20260805-nav-entry">
+<link rel="stylesheet" href="./css/style.css?v=20260805-header-search">
 </head>
 <body>
 
@@ -19,21 +19,6 @@
 
 <header class="topbar">
   <div class="topbar-inner">
-    <div class="mobile-nav-actions" aria-label="手機導覽">
-      <button class="mobile-nav-btn mobile-menu-btn" id="mobileMenuButton" type="button" aria-label="問題選單" aria-expanded="false">
-        <span class="mobile-nav-text">
-          <span id="mobileMenuTopLabel">問題</span>
-          <span id="mobileMenuBottomLabel">選單</span>
-        </span>
-      </button>
-      <button class="mobile-nav-btn mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-expanded="false">
-        <span class="mobile-nav-text">
-          <span id="mobileSitesTopLabel">常用</span>
-          <span id="mobileSitesBottomLabel">網站</span>
-        </span>
-      </button>
-    </div>
-
     <div class="brand-area">
       <div class="logo-slot">
         <img src="./assets/tree-logo.svg" alt="OO銀行 xxxx Bank">
@@ -45,8 +30,22 @@
           <span class="bank-name-en">xxxx Bank</span>
         </span>
       </div>
+      <div class="mobile-header-search" id="mobileHeaderSearch" role="search">
+        <div class="mobile-header-search-box">
+          <input id="mobileHeaderKeywordSearch" class="mobile-header-keyword-search" type="search" placeholder="實質受益人" autocomplete="off">
+          <button class="mobile-header-search-close" id="mobileHeaderSearchClose" type="button" aria-label="關閉搜尋">
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+        <div class="mobile-header-search-results" id="mobileHeaderSearchResults"></div>
+      </div>
       <div class="buddy-title">AML Buddy</div>
     </div>
+
+    <button class="mobile-header-search-toggle" id="mobileHeaderSearchButton" type="button" aria-label="搜尋" aria-expanded="false">
+      <span class="header-search-icon" aria-hidden="true"></span>
+    </button>
 
     <div class="top-actions">
       <div class="search-wrap" id="searchWrap">
@@ -56,6 +55,13 @@
         </div>
         <div class="search-dropdown" id="searchDropdown"></div>
       </div>
+
+      <button class="mobile-nav-btn mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-expanded="false">
+        <span class="mobile-nav-text">
+          <span id="mobileSitesTopLabel">常用</span>
+          <span id="mobileSitesBottomLabel">網站</span>
+        </span>
+      </button>
 
       <div class="language-switch" aria-label="語言切換">
         <button class="language-option is-active" type="button" data-lang-option="zh">中</button>
@@ -91,9 +97,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js?v=20260805-nav-entry"></script>
-<script src="./js/data.js?v=20260805-nav-entry"></script>
-<script src="./js/translations.js?v=20260805-nav-entry"></script>
-<script src="./js/app.js?v=20260805-nav-entry"></script>
+<script src="./vendor/supabase-js.js?v=20260805-header-search"></script>
+<script src="./js/data.js?v=20260805-header-search"></script>
+<script src="./js/translations.js?v=20260805-header-search"></script>
+<script src="./js/app.js?v=20260805-header-search"></script>
 </body>
 </html>
