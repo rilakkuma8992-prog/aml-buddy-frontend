@@ -54,6 +54,12 @@ const UI_TEXT = {
     recentSearches:"最近搜尋",
     chooseBiz:"請選擇業務別",
     usefulSites:"常用網站",
+    questionMenuTop:"問題",
+    questionMenuBottom:"選單",
+    usefulSitesTop:"常用",
+    usefulSitesBottom:"網站",
+    chooseQuestionCta:"選擇問題",
+    closeUsefulSitesLabel:"關閉常用網站",
     chooseQuestion:"請選擇您的問題",
     emptyAspectCategory:"尚無相關問題，內容陸續建置中",
     expandAll:"全部展開",
@@ -93,6 +99,12 @@ const UI_TEXT = {
     recentSearches:"Recent Searches",
     chooseBiz:"Select Business Line",
     usefulSites:"Useful Sites",
+    questionMenuTop:"Question",
+    questionMenuBottom:"Menu",
+    usefulSitesTop:"Useful",
+    usefulSitesBottom:"Sites",
+    chooseQuestionCta:"Select Question",
+    closeUsefulSitesLabel:"Close useful sites",
     chooseQuestion:"Select Your Question",
     emptyAspectCategory:"No related questions yet. Content is being added.",
     expandAll:"Expand all",
@@ -132,6 +144,12 @@ const UI_TEXT = {
     recentSearches:"最近の検索",
     chooseBiz:"業務区分を選択してください",
     usefulSites:"よく使うサイト",
+    questionMenuTop:"質問",
+    questionMenuBottom:"選択",
+    usefulSitesTop:"便利",
+    usefulSitesBottom:"サイト",
+    chooseQuestionCta:"質問を選択",
+    closeUsefulSitesLabel:"よく使うサイトを閉じる",
     chooseQuestion:"質問を選択してください",
     emptyAspectCategory:"関連する質問はまだありません。内容は順次追加中です。",
     expandAll:"すべて展開",
@@ -458,6 +476,8 @@ let recentSearches = [];
 let recentSearchTimer = null;
 let isMobileMenuOpen = false;
 let mobileMenuCloseTimer = null;
+let isMobileSitesOpen = false;
+let mobileSitesCloseTimer = null;
 let languageSheetCloseTimer = null;
 
 function t(key){
@@ -825,23 +845,30 @@ function syncMobileMenuState(){
   const button = document.getElementById("mobileMenuButton");
   if(button){
     button.setAttribute("aria-expanded", String(isMobileMenuOpen));
-    button.setAttribute("aria-label", isMobileMenuOpen ? t("closeMenuLabel") : t("menuButtonLabel"));
+    button.setAttribute("aria-label", isMobileMenuOpen ? t("closeMenuLabel") : `${t("questionMenuTop")}${t("questionMenuBottom")}`);
   }
 }
 
 function openMobileMenu(){
+  closeMobileSitesDropdown({instant:true});
+  closeSearchDropdown();
   clearTimeout(mobileMenuCloseTimer);
   document.body.classList.remove("is-mobile-menu-closing");
   isMobileMenuOpen = true;
   syncMobileMenuState();
 }
 
-function closeMobileMenu(){
-  if(!isMobileMenuOpen){
+function closeMobileMenu(options = {}){
+  if(!isMobileMenuOpen && !document.body.classList.contains("is-mobile-menu-closing")){
     return;
   }
   clearTimeout(mobileMenuCloseTimer);
   isMobileMenuOpen = false;
+  if(options.instant){
+    document.body.classList.remove("is-mobile-menu-open", "is-mobile-menu-closing");
+    syncMobileMenuState();
+    return;
+  }
   document.body.classList.add("is-mobile-menu-closing");
   syncMobileMenuState();
   mobileMenuCloseTimer = setTimeout(() => {
@@ -849,7 +876,46 @@ function closeMobileMenu(){
   }, 260);
 }
 
+function syncMobileSitesState(){
+  document.body.classList.toggle("is-mobile-sites-open", isMobileSitesOpen);
+  const button = document.getElementById("mobileSitesButton");
+  if(button){
+    button.setAttribute("aria-expanded", String(isMobileSitesOpen));
+    button.setAttribute("aria-label", isMobileSitesOpen ? t("closeUsefulSitesLabel") : t("usefulSites"));
+  }
+}
+
+function openMobileSitesDropdown(){
+  closeMobileMenu({instant:true});
+  closeSearchDropdown();
+  clearTimeout(mobileSitesCloseTimer);
+  document.body.classList.remove("is-mobile-sites-closing");
+  isMobileSitesOpen = true;
+  renderMobileSitesDropdown();
+  syncMobileSitesState();
+}
+
+function closeMobileSitesDropdown(options = {}){
+  if(!isMobileSitesOpen && !document.body.classList.contains("is-mobile-sites-closing")){
+    return;
+  }
+  clearTimeout(mobileSitesCloseTimer);
+  isMobileSitesOpen = false;
+  if(options.instant){
+    document.body.classList.remove("is-mobile-sites-open", "is-mobile-sites-closing");
+    syncMobileSitesState();
+    return;
+  }
+  document.body.classList.add("is-mobile-sites-closing");
+  syncMobileSitesState();
+  mobileSitesCloseTimer = setTimeout(() => {
+    document.body.classList.remove("is-mobile-sites-closing");
+  }, 220);
+}
+
 function openLanguageSheet(){
+  closeMobileSitesDropdown({instant:true});
+  closeMobileMenu({instant:true});
   const layer = document.getElementById("modalLayer");
   const mobileLanguageButton = document.getElementById("mobileLanguageButton");
   if(mobileLanguageButton){
@@ -1242,7 +1308,8 @@ function renderMobileQuestionSection(){
 function renderAnswerPanel(){
   let answerHtml = `
     <div class="answer-empty">
-      ${escapeHtml(t("emptyAnswer"))}
+      <span class="answer-empty-text">${escapeHtml(t("emptyAnswer"))}</span>
+      <button class="answer-empty-action" type="button" data-open-question-menu>${escapeHtml(t("chooseQuestionCta"))}</button>
     </div>`;
 
   if(selectedQuestion){
@@ -1311,16 +1378,37 @@ function renderMobileMenu(){
         <section class="mobile-menu-section" id="mobileQuestionSection">
           ${renderMobileQuestionSection()}
         </section>
-        <section class="mobile-menu-section">
-          <h3 class="mobile-section-title">${escapeHtml(t("usefulSites"))}</h3>
-          <div class="mobile-menu-card mobile-site-card">
-            ${renderUsefulLinks()}
-          </div>
-        </section>
       </div>
     </aside>`;
 
   syncMobileMenuState();
+}
+
+function renderMobileSitesDropdown(){
+  const layer = document.getElementById("mobileSitesLayer");
+  if(!layer){
+    return;
+  }
+
+  layer.innerHTML = `
+    <div class="mobile-sites-backdrop" data-mobile-sites-close></div>
+    <section class="mobile-sites-dropdown" role="dialog" aria-modal="true" aria-labelledby="mobileSitesTitle">
+      <h2 id="mobileSitesTitle">${escapeHtml(t("usefulSites"))}</h2>
+      ${renderUsefulLinks()}
+    </section>`;
+
+  syncMobileSitesState();
+  bindMobileSitesDropdownEvents();
+}
+
+function bindMobileSitesDropdownEvents(){
+  document.querySelectorAll("[data-mobile-sites-close]").forEach(button => {
+    button.onclick = closeMobileSitesDropdown;
+  });
+
+  document.querySelectorAll("#mobileSitesLayer .site-link").forEach(link => {
+    link.onclick = closeMobileSitesDropdown;
+  });
 }
 
 function isMobileMenuMounted(){
@@ -1452,6 +1540,18 @@ function bindAppEvents(){
     button.onclick = closeMobileMenu;
   });
 
+  document.querySelectorAll("[data-open-question-menu]").forEach(button => {
+    button.onclick = openMobileMenu;
+  });
+
+  document.querySelectorAll("[data-mobile-sites-close]").forEach(button => {
+    button.onclick = closeMobileSitesDropdown;
+  });
+
+  document.querySelectorAll("#mobileSitesLayer .site-link").forEach(link => {
+    link.onclick = closeMobileSitesDropdown;
+  });
+
   bindMobileSearchEvents();
 }
 
@@ -1471,6 +1571,34 @@ function bindChromeEvents(){
       }
     };
   }
+  const mobileMenuTopLabel = document.getElementById("mobileMenuTopLabel");
+  const mobileMenuBottomLabel = document.getElementById("mobileMenuBottomLabel");
+  if(mobileMenuTopLabel){
+    mobileMenuTopLabel.textContent = t("questionMenuTop");
+  }
+  if(mobileMenuBottomLabel){
+    mobileMenuBottomLabel.textContent = t("questionMenuBottom");
+  }
+
+  const mobileSitesButton = document.getElementById("mobileSitesButton");
+  if(mobileSitesButton){
+    mobileSitesButton.onclick = () => {
+      if(isMobileSitesOpen){
+        closeMobileSitesDropdown();
+      }else{
+        openMobileSitesDropdown();
+      }
+    };
+  }
+  const mobileSitesTopLabel = document.getElementById("mobileSitesTopLabel");
+  const mobileSitesBottomLabel = document.getElementById("mobileSitesBottomLabel");
+  if(mobileSitesTopLabel){
+    mobileSitesTopLabel.textContent = t("usefulSitesTop");
+  }
+  if(mobileSitesBottomLabel){
+    mobileSitesBottomLabel.textContent = t("usefulSitesBottom");
+  }
+  syncMobileSitesState();
 
   const mobileLanguageButton = document.getElementById("mobileLanguageButton");
   if(mobileLanguageButton){
@@ -1534,6 +1662,7 @@ function render(){
   renderChrome();
   renderAppPanels();
   renderMobileMenu();
+  renderMobileSitesDropdown();
   bindAppEvents();
 }
 
@@ -1541,6 +1670,16 @@ document.addEventListener("click", event => {
   const wrap = document.getElementById("searchWrap");
   if(wrap && !wrap.contains(event.target)){
     closeSearchDropdown();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if(event.key === "Escape"){
+    closeMobileMenu();
+    closeMobileSitesDropdown();
+    if(document.querySelector(".language-sheet")){
+      closeLanguageSheet();
+    }
   }
 });
 
