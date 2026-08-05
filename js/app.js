@@ -687,7 +687,7 @@ function selectBiz(bizId){
   selectedQuestion = null;
   clearRecentSearchTimer();
   searchQuery = "";
-  render();
+  refreshUi();
 }
 
 function toggleAspect(aspectId){
@@ -696,7 +696,7 @@ function toggleAspect(aspectId){
   }else{
     expandedAspects.add(aspectId);
   }
-  render();
+  refreshUi();
 }
 
 function toggleCategory(aspectId, categoryId){
@@ -706,7 +706,7 @@ function toggleCategory(aspectId, categoryId){
   }else{
     expandedCategories.add(groupKey);
   }
-  render();
+  refreshUi();
 }
 
 function toggleAllCategories(){
@@ -716,12 +716,12 @@ function toggleAllCategories(){
     groups.every(group => expandedCategories.has(group.groupKey));
   expandedAspects = allOpen ? new Set() : new Set(aspectKeys);
   expandedCategories = allOpen ? new Set() : new Set(groups.map(group => group.groupKey));
-  render();
+  refreshUi();
 }
 
 function selectQuestion(aspectId, topicId, idx){
   selectedQuestion = {biz:selectedBiz, aspect:aspectId, topic:topicId, idx};
-  render();
+  refreshUi();
 }
 
 function jumpToAnswer(bizId, aspectId, topicId, idx){
@@ -732,7 +732,7 @@ function jumpToAnswer(bizId, aspectId, topicId, idx){
     expandedCategories.add(getGroupKey(aspectId, topic.category));
   }
   selectedQuestion = {biz:bizId, aspect:aspectId, topic:topicId, idx};
-  render();
+  refreshUi();
 }
 
 function applySearch(rawQuery, options = {}){
@@ -744,7 +744,7 @@ function applySearch(rawQuery, options = {}){
 
   if(!searchQuery){
     selectedQuestion = null;
-    render();
+    refreshUi();
     return;
   }
 
@@ -777,7 +777,7 @@ function applySearch(rawQuery, options = {}){
     expandedCategories = new Set(getAllCategoryKeys());
   }
 
-  render();
+  refreshUi();
 }
 
 function changeLanguage(lang){
@@ -1217,6 +1217,28 @@ function renderCategoryPanel(){
     </section>`;
 }
 
+function getMobileQuestionSectionState(){
+  const aspectGroups = buildCategoryGroups(selectedBiz);
+  const allGroups = aspectGroups.flatMap(aspect => aspect.categories);
+  const aspectKeys = getAllAspectKeys();
+  const allOpen = aspectKeys.every(aspectId => expandedAspects.has(aspectId)) &&
+    allGroups.every(group => expandedCategories.has(group.groupKey));
+
+  return {aspectGroups, allOpen};
+}
+
+function renderMobileQuestionSection(){
+  const {aspectGroups, allOpen} = getMobileQuestionSectionState();
+  return `
+    <div class="mobile-section-head">
+      <h3 class="mobile-section-title">${escapeHtml(t("mobileFaqTitle"))}</h3>
+      <button class="expand-all-btn mobile-expand-all" type="button" data-toggle-all="true">${escapeHtml(allOpen ? t("collapseAll") : t("expandAll"))}</button>
+    </div>
+    <div class="mobile-menu-card mobile-question-card">
+      ${renderCategoryStack(aspectGroups)}
+    </div>`;
+}
+
 function renderAnswerPanel(){
   let answerHtml = `
     <div class="answer-empty">
@@ -1267,12 +1289,6 @@ function renderMobileMenu(){
     return;
   }
 
-  const aspectGroups = buildCategoryGroups(selectedBiz);
-  const allGroups = aspectGroups.flatMap(aspect => aspect.categories);
-  const aspectKeys = getAllAspectKeys();
-  const allOpen = aspectKeys.every(aspectId => expandedAspects.has(aspectId)) &&
-    allGroups.every(group => expandedCategories.has(group.groupKey));
-
   layer.innerHTML = `
     <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
     <aside class="mobile-menu-drawer" role="dialog" aria-modal="true" aria-labelledby="mobileMenuTitle">
@@ -1288,18 +1304,12 @@ function renderMobileMenu(){
         ${renderMobileSearchPanel()}
         <section class="mobile-menu-section">
           <h3 class="mobile-section-title">${escapeHtml(t("mobileBizTitle"))}</h3>
-          <div class="mobile-menu-card">
+          <div class="mobile-menu-card" id="mobileBizSection">
             ${renderBizList()}
           </div>
         </section>
-        <section class="mobile-menu-section">
-          <div class="mobile-section-head">
-            <h3 class="mobile-section-title">${escapeHtml(t("mobileFaqTitle"))}</h3>
-            <button class="expand-all-btn mobile-expand-all" type="button" data-toggle-all="true">${escapeHtml(allOpen ? t("collapseAll") : t("expandAll"))}</button>
-          </div>
-          <div class="mobile-menu-card mobile-question-card">
-            ${renderCategoryStack(aspectGroups)}
-          </div>
+        <section class="mobile-menu-section" id="mobileQuestionSection">
+          ${renderMobileQuestionSection()}
         </section>
         <section class="mobile-menu-section">
           <h3 class="mobile-section-title">${escapeHtml(t("usefulSites"))}</h3>
@@ -1311,6 +1321,70 @@ function renderMobileMenu(){
     </aside>`;
 
   syncMobileMenuState();
+}
+
+function isMobileMenuMounted(){
+  return Boolean(document.querySelector("#mobileMenuLayer .mobile-menu-content"));
+}
+
+function renderAppPanels(){
+  const app = document.getElementById("app");
+  if(!app){
+    return;
+  }
+
+  app.innerHTML = `
+    ${renderBizPanel()}
+    ${renderCategoryPanel()}
+    ${renderAnswerPanel()}
+  `;
+}
+
+function refreshMobileMenuSections(){
+  const content = document.querySelector("#mobileMenuLayer .mobile-menu-content");
+  if(!content){
+    return;
+  }
+
+  const previousScrollTop = content.scrollTop;
+  const bizSection = document.getElementById("mobileBizSection");
+  const questionSection = document.getElementById("mobileQuestionSection");
+  const mobileSearchInput = document.getElementById("mobileKeywordSearch");
+
+  if(bizSection){
+    bizSection.innerHTML = renderBizList();
+  }
+  if(questionSection){
+    questionSection.innerHTML = renderMobileQuestionSection();
+  }
+  if(mobileSearchInput){
+    mobileSearchInput.value = searchQuery;
+  }
+  renderMobileSearchResultsOnly();
+  restoreMobileMenuScroll(content, previousScrollTop);
+}
+
+function restoreMobileMenuScroll(content, scrollTop){
+  const applyScroll = () => {
+    const maxScrollTop = Math.max(0, content.scrollHeight - content.clientHeight);
+    content.scrollTop = Math.min(scrollTop, maxScrollTop);
+  };
+
+  applyScroll();
+  requestAnimationFrame(applyScroll);
+  setTimeout(applyScroll, 0);
+}
+
+function refreshUi(){
+  if(isMobileMenuOpen && isMobileMenuMounted()){
+    renderChrome();
+    renderAppPanels();
+    refreshMobileMenuSections();
+    bindAppEvents();
+    return;
+  }
+
+  render();
 }
 
 function renderSearchDropdown(){
@@ -1457,15 +1531,8 @@ function renderChrome(){
 }
 
 function render(){
-  const app = document.getElementById("app");
-
   renderChrome();
-  app.innerHTML = `
-    ${renderBizPanel()}
-    ${renderCategoryPanel()}
-    ${renderAnswerPanel()}
-  `;
-
+  renderAppPanels();
   renderMobileMenu();
   bindAppEvents();
 }
