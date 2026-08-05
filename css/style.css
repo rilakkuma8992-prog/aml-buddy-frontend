@@ -53,8 +53,8 @@ body{
   justify-content:center;
   gap:18px;
   color:var(--green-dark);
-  font-size:clamp(26px,7vw,46px);
-  font-weight:850;
+  font-size:clamp(25px,6.6vw,44px);
+  font-weight:600;
   letter-spacing:0;
 }
 
@@ -64,21 +64,36 @@ body{
 }
 
 .splash-bank{
+  color:rgba(var(--green-dark-rgb),.94);
+  font-weight:400;
   animation:splashTextIn .46s ease .18s forwards;
 }
 
 .splash-product{
+  font-weight:780;
   animation:splashTextIn .46s ease .52s forwards;
 }
 
 .splash-divider{
-  width:2px;
+  width:1px;
   height:1.1em;
   border-radius:999px;
   background:rgba(var(--green-dark-rgb),.45);
   opacity:0;
   transform:scaleY(.35);
   animation:splashDividerIn .34s ease .42s forwards;
+}
+
+.splash-footer-logo{
+  position:absolute;
+  left:50%;
+  bottom:max(34px,calc(env(safe-area-inset-bottom) + 28px));
+  width:34px;
+  height:auto;
+  opacity:0;
+  transform:translate(-50%,10px);
+  filter:drop-shadow(0 8px 14px rgba(var(--green-dark-rgb),.12));
+  animation:splashFooterIn .46s ease .68s forwards;
 }
 
 @keyframes splashTextIn{
@@ -92,6 +107,13 @@ body{
   to{
     opacity:1;
     transform:scaleY(1);
+  }
+}
+
+@keyframes splashFooterIn{
+  to{
+    opacity:.94;
+    transform:translate(-50%,0);
   }
 }
 
@@ -547,7 +569,7 @@ button{
 
 .panel-title{
   margin:0;
-  font-size:20px;
+  font-size:19px;
   line-height:1.35;
 }
 
@@ -810,21 +832,22 @@ button{
 
 .answer-content{
   display:grid;
-  gap:14px;
+  gap:12px;
 }
 
 .answer-question{
   margin:0;
-  padding:18px;
+  padding:16px;
   border-radius:8px;
   background:linear-gradient(135deg,var(--green-primary-soft),var(--green-dark));
   color:var(--surface);
-  font-size:20px;
-  line-height:1.55;
+  font-size:18px;
+  font-weight:650;
+  line-height:1.48;
 }
 
 .answer-card{
-  padding:18px;
+  padding:16px;
   border:1px solid var(--line);
   border-radius:8px;
   background:var(--answer-bg);
@@ -833,14 +856,14 @@ button{
 .answer-label{
   margin:0 0 8px;
   color:var(--green-primary);
-  font-size:12px;
-  font-weight:800;
+  font-size:11.5px;
+  font-weight:700;
 }
 
 .answer-text{
   margin:0;
-  font-size:15px;
-  line-height:1.85;
+  font-size:14px;
+  line-height:1.72;
   white-space:pre-line;
 }
 
@@ -861,16 +884,16 @@ button{
 .meta-text{
   margin:0;
   color:var(--ink);
-  font-size:14px;
-  line-height:1.7;
+  font-size:13px;
+  line-height:1.65;
   white-space:pre-line;
 }
 
 .meta-disclaimer{
   margin:6px 0 0;
   color:var(--sub);
-  font-size:11.5px;
-  line-height:1.6;
+  font-size:11px;
+  line-height:1.55;
 }
 
 .contact-card{
@@ -1340,17 +1363,18 @@ button{
 
   .answer-empty{
     min-height:42svh;
-    padding:22px;
-    font-size:15px;
+    padding:20px;
+    font-size:14px;
   }
 
   .answer-question{
-    padding:16px;
-    font-size:18px;
+    padding:14px;
+    font-size:16px;
+    line-height:1.48;
   }
 
   .answer-card{
-    padding:16px;
+    padding:14px;
   }
 
   .contact-card{
