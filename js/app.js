@@ -1493,8 +1493,17 @@ function renderMobileSitesDropdown(){
   layer.innerHTML = `
     <div class="mobile-sites-backdrop" data-mobile-sites-close></div>
     <section class="mobile-sites-dropdown" role="dialog" aria-modal="true" aria-labelledby="mobileSitesTitle">
-      <h2 id="mobileSitesTitle">${escapeHtml(t("usefulSites"))}</h2>
-      ${renderUsefulLinks()}
+      <div class="mobile-sheet-handle" aria-hidden="true"></div>
+      <div class="mobile-sites-top">
+        <button class="mobile-menu-close mobile-sites-close" type="button" aria-label="${escapeHtml(t("closeUsefulSitesLabel"))}" data-mobile-sites-close>
+          <span></span>
+          <span></span>
+        </button>
+        <h2 id="mobileSitesTitle">${escapeHtml(t("usefulSites"))}</h2>
+      </div>
+      <div class="mobile-sites-content">
+        ${renderUsefulLinks()}
+      </div>
     </section>`;
 
   syncMobileSitesState();

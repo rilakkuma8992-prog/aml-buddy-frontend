@@ -191,6 +191,18 @@ button{
   cursor:pointer;
 }
 
+.mobile-sites-btn:focus,
+.mobile-header-search-toggle:focus,
+.mobile-language-trigger:focus{
+  outline:none;
+}
+
+.mobile-sites-btn:focus-visible,
+.mobile-header-search-toggle:focus-visible,
+.mobile-language-trigger:focus-visible{
+  outline:none;
+}
+
 .mobile-nav-actions{
   align-items:center;
   gap:5px;
@@ -1344,7 +1356,7 @@ button{
     flex-direction:row;
     align-items:center;
     justify-content:space-between;
-    gap:10px;
+    gap:8px;
     padding:10px 18px;
   }
 
@@ -1358,9 +1370,9 @@ button{
 
   .mobile-nav-btn{
     display:grid;
-    width:42px;
-    height:42px;
-    flex:0 0 42px;
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
   }
 
   .brand-area{
@@ -1376,12 +1388,12 @@ button{
     width:auto;
     min-width:0;
     justify-content:center;
-    gap:7px;
+    gap:8px;
   }
 
   .logo-slot img{
-    width:31px;
-    height:28px;
+    width:36px;
+    height:32px;
   }
 
   .bank-text{
@@ -1389,7 +1401,7 @@ button{
   }
 
   .bank-name{
-    font-size:18px;
+    font-size:20px;
     line-height:1;
   }
 
@@ -1412,7 +1424,7 @@ button{
     align-items:center;
     flex-direction:row;
     justify-content:flex-end;
-    gap:6px;
+    gap:4px;
   }
 
   .search-wrap{
@@ -1430,6 +1442,39 @@ button{
 
   .mobile-language-trigger{
     display:flex;
+  }
+
+  .mobile-header-search-toggle{
+    width:36px;
+    height:36px;
+    flex-basis:36px;
+  }
+
+  .header-search-icon{
+    width:22px;
+    height:22px;
+    border-width:2.5px;
+  }
+
+  .header-search-icon::after{
+    right:-6px;
+    bottom:-5px;
+    width:9px;
+    height:2.5px;
+  }
+
+  .mobile-sites-icon{
+    width:24px;
+    height:24px;
+    stroke-width:2.65;
+  }
+
+  .mobile-language-trigger{
+    width:36px;
+    min-width:36px;
+    height:36px;
+    flex-basis:36px;
+    font-size:15.5px;
   }
 
   .mobile-header-search{
@@ -1603,8 +1648,13 @@ button{
 
   .answer-empty{
     min-height:100%;
+    gap:0;
     padding:20px;
     font-size:14px;
+  }
+
+  .answer-empty-text{
+    display:none;
   }
 
   .answer-empty-action{
@@ -1945,9 +1995,9 @@ button{
   .mobile-sites-backdrop{
     position:absolute;
     inset:0;
-    background:rgba(0,0,0,.26);
+    background:rgba(0,0,0,.32);
     opacity:0;
-    transition:opacity .2s ease;
+    transition:opacity .24s ease;
   }
 
   body.is-mobile-sites-open .mobile-sites-backdrop{
@@ -1960,47 +2010,63 @@ button{
 
   .mobile-sites-dropdown{
     position:absolute;
-    top:calc(var(--topbar-height) + 8px);
-    right:18px;
-    width:min(228px,calc(100vw - 36px));
-    border:1px solid rgba(var(--green-dark-rgb),.08);
-    border-radius:8px;
-    background:#fff;
-    box-shadow:0 18px 42px rgba(0,0,0,.18);
-    padding:12px;
-    opacity:0;
-    transform:translateY(-8px);
-    transition:opacity .2s ease, transform .22s cubic-bezier(.22,.85,.25,1);
+    left:10px;
+    right:10px;
+    bottom:0;
+    width:auto;
+    max-height:min(58svh,520px);
+    display:flex;
+    flex-direction:column;
+    border-radius:28px 28px 0 0;
+    background:#f4f4f4;
+    box-shadow:0 -18px 44px rgba(0,0,0,.18);
+    overflow:hidden;
+    transform:translateY(108%);
+    transition:transform .26s cubic-bezier(.22,.85,.25,1);
   }
 
   body.is-mobile-sites-open .mobile-sites-dropdown{
-    opacity:1;
     transform:translateY(0);
   }
 
   body.is-mobile-sites-closing .mobile-sites-dropdown{
-    opacity:0;
-    transform:translateY(-8px);
+    transform:translateY(108%);
   }
 
-  .mobile-sites-dropdown h2{
-    margin:0 0 10px;
+  .mobile-sites-top{
+    min-height:62px;
+    display:grid;
+    grid-template-columns:56px 1fr 56px;
+    align-items:center;
+    padding:0 18px 8px;
+  }
+
+  .mobile-sites-top h2{
+    margin:0;
     color:#2f3531;
-    font-size:15px;
+    font-size:21px;
     font-weight:800;
+    text-align:center;
+  }
+
+  .mobile-sites-content{
+    padding:0 20px 24px;
+    overflow:auto;
   }
 
   .mobile-sites-dropdown .site-links{
-    gap:7px;
+    gap:10px;
   }
 
   .mobile-sites-dropdown .site-link{
     display:flex;
     align-items:center;
-    min-height:42px;
-    padding:9px 10px;
+    min-height:52px;
+    padding:12px 14px;
+    border-color:rgba(var(--green-dark-rgb),.08);
     color:#53615a;
-    font-size:13px;
+    font-size:15px;
+    background:#fff;
   }
 
   .language-sheet{
@@ -2073,9 +2139,9 @@ button{
 
   .mobile-nav-btn,
   .mobile-header-search-toggle{
-    width:39px;
-    height:39px;
-    flex-basis:39px;
+    width:34px;
+    height:34px;
+    flex-basis:34px;
   }
 
   .mobile-nav-text{
@@ -2087,19 +2153,20 @@ button{
   }
 
   .logo-slot img{
-    width:28px;
-    height:25px;
+    width:34px;
+    height:30px;
   }
 
   .bank-name{
-    font-size:17px;
+    font-size:19px;
   }
 
   .mobile-language-trigger{
-    width:39px;
-    min-width:39px;
-    flex-basis:39px;
-    font-size:15px;
+    width:34px;
+    min-width:34px;
+    height:34px;
+    flex-basis:34px;
+    font-size:14.5px;
   }
 
   .mobile-header-keyword-search{
