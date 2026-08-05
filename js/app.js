@@ -490,6 +490,8 @@ let isMobileSitesOpen = false;
 let mobileSitesCloseTimer = null;
 let isHeaderSearchOpen = false;
 let languageSheetCloseTimer = null;
+let mobileMenuReturnState = null;
+let selectedQuestionReturnMode = "";
 
 function t(key){
   return UI_TEXT[currentLang][key];
@@ -750,8 +752,43 @@ function toggleAllCategories(){
   refreshUi();
 }
 
-function selectQuestion(aspectId, topicId, idx){
+function captureMobileMenuReturnState(){
+  const content = document.querySelector("#mobileMenuLayer .mobile-menu-content");
+  mobileMenuReturnState = {
+    biz:selectedBiz,
+    expandedAspects:[...expandedAspects],
+    expandedCategories:[...expandedCategories],
+    scrollTop:content?.scrollTop || 0
+  };
+}
+
+function restoreMobileMenuReturnState(){
+  const state = mobileMenuReturnState;
+  if(!state || !activeDB[state.biz]){
+    return false;
+  }
+
+  selectedBiz = state.biz;
+  expandedAspects = new Set(state.expandedAspects || []);
+  expandedCategories = new Set(state.expandedCategories || []);
+  selectedQuestion = null;
+  selectedQuestionReturnMode = "";
+  closeHeaderSearch();
+  renderAppPanels();
+  renderMobileMenu();
+  bindAppEvents();
+  openMobileMenu();
+
+  const content = document.querySelector("#mobileMenuLayer .mobile-menu-content");
+  if(content){
+    restoreMobileMenuScroll(content, state.scrollTop || 0);
+  }
+  return true;
+}
+
+function selectQuestion(aspectId, topicId, idx, options = {}){
   selectedQuestion = {biz:selectedBiz, aspect:aspectId, topic:topicId, idx};
+  selectedQuestionReturnMode = options.returnMode || "";
   refreshUi();
 }
 
@@ -763,12 +800,18 @@ function jumpToAnswer(bizId, aspectId, topicId, idx){
     expandedCategories.add(getGroupKey(aspectId, topic.category));
   }
   selectedQuestion = {biz:bizId, aspect:aspectId, topic:topicId, idx};
+  selectedQuestionReturnMode = "";
   refreshUi();
 }
 
 function returnToQuestionStart(){
+  const shouldRestoreMobileMenu = selectedQuestionReturnMode === "mobile-menu";
   selectedQuestion = null;
+  selectedQuestionReturnMode = "";
   closeHeaderSearch();
+  if(shouldRestoreMobileMenu && restoreMobileMenuReturnState()){
+    return;
+  }
   closeMobileMenu({instant:true});
   refreshUi();
 }
@@ -1093,6 +1136,29 @@ function renderUsefulLinks(){
         <a class="site-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(localize(link.label))}</a>
       `).join("")}
     </div>`;
+}
+
+function renderBizEntryIcon(bizId){
+  if(bizId === "consumer"){
+    return `
+      <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <circle cx="24" cy="16" r="7"></circle>
+        <path d="M12 39c1.9-8.3 6.5-12.4 12-12.4S34.1 30.7 36 39"></path>
+        <path d="M18.7 16.5c1.5 1.5 3.2 2.2 5.3 2.2s3.8-.7 5.3-2.2"></path>
+      </svg>`;
+  }
+
+  return `
+    <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <path d="M7 39h34"></path>
+      <path d="M10 21h28"></path>
+      <path d="M13 21v18"></path>
+      <path d="M21 21v18"></path>
+      <path d="M29 21v18"></path>
+      <path d="M37 21v18"></path>
+      <path d="M9 18 24 9l15 9"></path>
+      <path d="M17 39h14"></path>
+    </svg>`;
 }
 
 function renderSearchPanelContent(){
@@ -1437,8 +1503,9 @@ function renderAnswerPanel(){
         <span class="answer-empty-text answer-empty-business-prompt">${escapeHtml(t("chooseBusinessPrompt"))}</span>
         <div class="answer-empty-biz-actions">
           ${getBizEntries().map(biz => `
-            <button class="answer-empty-action answer-empty-biz-action" type="button" data-open-question-menu-biz="${escapeHtml(biz.id)}">
-              ${escapeHtml(localize(biz.label))}
+            <button class="answer-empty-biz-card" type="button" data-open-question-menu-biz="${escapeHtml(biz.id)}">
+              <span class="answer-empty-biz-icon">${renderBizEntryIcon(biz.id)}</span>
+              <span class="answer-empty-biz-label">${escapeHtml(localize(biz.label))}</span>
             </button>
           `).join("")}
         </div>
@@ -1674,7 +1741,15 @@ function bindAppEvents(){
   document.querySelectorAll("[data-aspect][data-topic][data-idx]").forEach(button => {
     button.onclick = () => {
       const shouldCloseMenu = Boolean(button.closest("#mobileMenuLayer"));
-      selectQuestion(button.dataset.aspect, button.dataset.topic, Number(button.dataset.idx));
+      if(shouldCloseMenu){
+        captureMobileMenuReturnState();
+      }
+      selectQuestion(
+        button.dataset.aspect,
+        button.dataset.topic,
+        Number(button.dataset.idx),
+        shouldCloseMenu ? {returnMode:"mobile-menu"} : {}
+      );
       if(shouldCloseMenu){
         closeMobileMenu();
       }
