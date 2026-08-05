@@ -1469,7 +1469,6 @@ function renderMobileMenu(){
         <h2 id="mobileMenuTitle">${escapeHtml(t("mobileMenuTitle"))}</h2>
       </div>
       <div class="mobile-menu-content">
-        ${renderMobileSearchPanel()}
         <section class="mobile-menu-section">
           <h3 class="mobile-section-title">${escapeHtml(t("mobileBizTitle"))}</h3>
           <div class="mobile-menu-card" id="mobileBizSection">

@@ -210,6 +210,58 @@ button{
   box-shadow:0 5px 14px rgba(var(--green-dark-rgb),.06);
 }
 
+.mobile-sites-btn{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  place-items:center;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#53615a;
+  box-shadow:none;
+}
+
+.mobile-sites-icon{
+  position:relative;
+  width:28px;
+  height:28px;
+  opacity:.76;
+}
+
+.mobile-sites-icon::before,
+.mobile-sites-icon::after{
+  content:"";
+  position:absolute;
+  top:9px;
+  width:16px;
+  height:9px;
+  border:3px solid currentColor;
+  border-radius:999px;
+  background:transparent;
+  transform:rotate(-35deg);
+}
+
+.mobile-sites-icon::before{
+  left:1px;
+}
+
+.mobile-sites-icon::after{
+  right:1px;
+}
+
+.mobile-sites-icon span{
+  position:absolute;
+  left:9px;
+  top:12px;
+  width:10px;
+  height:4px;
+  border-radius:999px;
+  background:#fff;
+  transform:rotate(-35deg);
+}
+
 .mobile-nav-text{
   display:grid;
   gap:2px;
