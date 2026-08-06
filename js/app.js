@@ -1443,6 +1443,7 @@ function renderCategoryStack(aspectGroups){
         return `
         <section class="topic-block aspect-block ${isAspectOpen ? "is-open" : ""}">
           <button class="topic-toggle aspect-toggle" type="button" data-aspect-toggle="${aspect.id}" aria-expanded="${isAspectOpen}">
+            <span class="row-icon-chip" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"></path></svg></span>
             <span class="toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
             <span class="topic-name">${escapeHtml(localize(aspect.label))}</span>
             <span class="topic-count">${escapeHtml(formatQuestionCount(aspectQuestionTotal))}</span>
