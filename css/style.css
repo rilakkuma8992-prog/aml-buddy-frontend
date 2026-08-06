@@ -1580,16 +1580,16 @@ button{
   }
 
   .header-search-icon{
-    width:22px;
-    height:22px;
-    border-width:2.5px;
+    width:18px;
+    height:18px;
+    border-width:2px;
   }
 
   .header-search-icon::after{
-    right:-6px;
-    bottom:-5px;
-    width:9px;
-    height:2.5px;
+    right:-5px;
+    bottom:-4px;
+    width:7px;
+    height:2px;
   }
 
   .mobile-sites-icon{
@@ -1736,7 +1736,7 @@ button{
   .page-shell{
     width:100%;
     min-height:calc(100svh - var(--topbar-height));
-    padding:14px 14px 22px;
+    padding:0 14px 22px;
   }
 
   .desktop-app{
@@ -1770,6 +1770,10 @@ button{
     padding:14px 14px 0;
   }
 
+  .answer-panel.is-home-list .panel-body{
+    padding:0;
+  }
+
   .answer-shell{
     flex:1;
     width:100%;
@@ -1781,6 +1785,11 @@ button{
     padding:20px;
     font-size:14px;
     align-content:start;
+  }
+
+  .answer-panel.is-home-list .answer-empty{
+    padding:18px 10px 22px;
+    border-radius:8px;
   }
 
   .answer-empty-question-prompt{
