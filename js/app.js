@@ -1144,7 +1144,6 @@ function renderBizEntryIcon(bizId){
       <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
         <circle cx="24" cy="16" r="7"></circle>
         <path d="M12 39c1.9-8.3 6.5-12.4 12-12.4S34.1 30.7 36 39"></path>
-        <path d="M18.7 16.5c1.5 1.5 3.2 2.2 5.3 2.2s3.8-.7 5.3-2.2"></path>
       </svg>`;
   }
 
