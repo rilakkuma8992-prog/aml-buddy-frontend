@@ -46,6 +46,7 @@ const UI_TEXT = {
     mobileMenuTitle:"選單",
     mobileBizTitle:"業務別",
     mobileFaqTitle:"常見問題",
+    homeListTitle:"問題選單",
     searchLabel:"搜尋",
     closeSearchLabel:"關閉搜尋",
     searchPlaceholder:"實質受益人",
@@ -92,6 +93,7 @@ const UI_TEXT = {
     mobileMenuTitle:"Menu",
     mobileBizTitle:"Business Line",
     mobileFaqTitle:"FAQs",
+    homeListTitle:"Question Menu",
     searchLabel:"Search",
     closeSearchLabel:"Close search",
     searchPlaceholder:"Beneficial owner",
@@ -138,6 +140,7 @@ const UI_TEXT = {
     mobileMenuTitle:"メニュー",
     mobileBizTitle:"業務区分",
     mobileFaqTitle:"よくある質問",
+    homeListTitle:"質問メニュー",
     searchLabel:"検索",
     closeSearchLabel:"検索を閉じる",
     searchPlaceholder:"実質的支配者",
@@ -1565,13 +1568,21 @@ function renderMobileQuestionSection(){
     </div>`;
 }
 
+function renderHomeQuestionTree(){
+  const {aspectGroups} = getMobileQuestionSectionState();
+  return `
+    <div class="mobile-menu-card mobile-question-card">
+      ${renderCategoryStack(aspectGroups)}
+    </div>`;
+}
+
 function renderAnswerPanel(){
   let answerHtml = `
     <div class="answer-empty">
       <span class="answer-empty-text answer-empty-question-prompt">${escapeHtml(t("emptyAnswer"))}</span>
       <div class="answer-empty-mobile-choice">
         <div class="home-question-tree" id="homeQuestionTree">
-          ${renderMobileQuestionSection()}
+          ${renderHomeQuestionTree()}
         </div>
       </div>
     </div>`;
@@ -1600,15 +1611,21 @@ function renderAnswerPanel(){
     }
   }
 
-  const panelHeadHtml = selectedQuestion
-    ? `
+  let panelHeadHtml;
+  if(selectedQuestion){
+    panelHeadHtml = `
       <div class="panel-head">
         <button class="answer-back-btn" type="button" data-answer-back>${escapeHtml(t("answerBack"))}</button>
-      </div>`
-    : `
+      </div>`;
+  }else{
+    const {allOpen} = getMobileQuestionSectionState();
+    panelHeadHtml = `
       <div class="panel-head panel-head-home-list">
         <button class="answer-back-btn" type="button" data-home-list-back>${escapeHtml(t("answerBack"))}</button>
+        <h2 class="home-list-title">${escapeHtml(t("homeListTitle"))}</h2>
+        <button class="expand-all-btn mobile-expand-all home-list-expand-all" type="button" data-toggle-all="true">${escapeHtml(allOpen ? t("collapseAll") : t("expandAll"))}</button>
       </div>`;
+  }
 
   return `
     <section class="app-panel answer-panel">

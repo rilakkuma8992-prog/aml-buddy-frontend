@@ -1695,6 +1695,7 @@ button{
     gap:14px;
     padding:20px;
     font-size:14px;
+    align-content:start;
   }
 
   .answer-empty-question-prompt{
@@ -1709,7 +1710,31 @@ button{
   }
 
   .panel-head-home-list{
-    display:block;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .panel-head-home-list .answer-back-btn{
+    flex:0 0 auto;
+  }
+
+  .home-list-title{
+    flex:1;
+    min-width:0;
+    margin:0;
+    color:#2f3531;
+    font-size:17px;
+    font-weight:850;
+    text-align:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .home-list-expand-all{
+    flex:0 0 auto;
   }
 
   .answer-empty-business-prompt{
