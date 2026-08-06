@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css?v=20260806-biz-select-flow-v1">
+<link rel="stylesheet" href="./css/style.css?v=20260806-lang-dropdown-v2">
 </head>
 <body>
 
@@ -65,15 +65,16 @@
         </svg>
       </button>
 
-      <div class="language-switch" aria-label="語言切換">
+      <div class="language-switch lang-switcher" aria-label="語言切換">
         <button class="language-option is-active" type="button" data-lang-option="zh">中</button>
         <span aria-hidden="true">／</span>
         <button class="language-option" type="button" data-lang-option="en">EN</button>
         <span aria-hidden="true">／</span>
         <button class="language-option" type="button" data-lang-option="ja">日</button>
-        <button class="mobile-language-trigger" id="mobileLanguageButton" type="button" aria-haspopup="dialog" aria-expanded="false" data-language-trigger>
+        <button class="mobile-language-trigger" id="mobileLanguageButton" type="button" aria-haspopup="listbox" aria-expanded="false" data-language-trigger>
           <span id="mobileLanguageLabel">ZH</span>
         </button>
+        <div class="lang-dropdown" id="mobileLangDropdown"></div>
       </div>
     </div>
   </div>
@@ -98,9 +99,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js?v=20260806-biz-select-flow-v1"></script>
-<script src="./js/data.js?v=20260806-biz-select-flow-v1"></script>
-<script src="./js/translations.js?v=20260806-biz-select-flow-v1"></script>
-<script src="./js/app.js?v=20260806-biz-select-flow-v1"></script>
+<script src="./vendor/supabase-js.js?v=20260806-lang-dropdown-v2"></script>
+<script src="./js/data.js?v=20260806-lang-dropdown-v2"></script>
+<script src="./js/translations.js?v=20260806-lang-dropdown-v2"></script>
+<script src="./js/app.js?v=20260806-lang-dropdown-v2"></script>
 </body>
 </html>

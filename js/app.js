@@ -492,7 +492,6 @@ let mobileMenuCloseTimer = null;
 let isMobileSitesOpen = false;
 let mobileSitesCloseTimer = null;
 let isHeaderSearchOpen = false;
-let languageSheetCloseTimer = null;
 let mobileMenuReturnState = null;
 let selectedQuestionReturnMode = "";
 let hasChosenBiz = false;
@@ -768,9 +767,12 @@ function renderBizSelectScreen(){
   }
 
   screen.innerHTML = `
-    <button class="biz-select-lang-btn mobile-language-trigger" type="button" id="bizSelectLanguageButton" aria-haspopup="dialog" aria-expanded="false" aria-label="${escapeHtml(t("langLabel"))}" data-language-trigger>
-      <span id="bizSelectLanguageLabel">${escapeHtml(getLanguageOption(currentLang).short)}</span>
-    </button>
+    <div class="lang-switcher biz-select-lang-switcher" id="bizSelectLangSwitcher">
+      <button class="biz-select-lang-btn mobile-language-trigger" type="button" id="bizSelectLanguageButton" aria-haspopup="listbox" aria-expanded="false" aria-label="${escapeHtml(t("langLabel"))}" data-language-trigger>
+        <span id="bizSelectLanguageLabel">${escapeHtml(getLanguageOption(currentLang).short)}</span>
+      </button>
+      <div class="lang-dropdown" id="bizSelectLangDropdown"></div>
+    </div>
     <div class="biz-select-inner">
       <p class="biz-select-prompt">${escapeHtml(t("chooseBusinessPrompt"))}</p>
       <div class="biz-select-actions">
@@ -781,7 +783,8 @@ function renderBizSelectScreen(){
           </button>
         `).join("")}
       </div>
-    </div>`;
+    </div>
+    <img class="splash-footer-logo" src="./assets/tree-logo.svg" alt="">`;
 }
 
 function bindBizSelectEvents(){
@@ -789,10 +792,7 @@ function bindBizSelectEvents(){
     button.onclick = () => chooseBizFromSelectScreen(button.dataset.selectBiz);
   });
 
-  const bizSelectLanguageButton = document.getElementById("bizSelectLanguageButton");
-  if(bizSelectLanguageButton){
-    bizSelectLanguageButton.onclick = openLanguageSheet;
-  }
+  bindLanguageDropdown(document.getElementById("bizSelectLangSwitcher"));
 }
 
 function toggleAspect(aspectId){
@@ -956,22 +956,59 @@ function closeModal(){
   setLanguageTriggersExpanded(false);
 }
 
-function closeLanguageSheet(){
-  const layer = document.getElementById("modalLayer");
-  const sheet = layer.querySelector(".language-sheet");
-  const mask = layer.querySelector(".language-sheet-mask");
+function closeAllLanguageDropdowns(){
+  document.querySelectorAll(".lang-switcher").forEach(el => {
+    el.classList.remove("is-open");
+  });
   setLanguageTriggersExpanded(false);
-  if(!sheet){
-    closeModal();
+}
+
+function toggleLanguageDropdown(switcherEl){
+  if(!switcherEl){
     return;
   }
+  const isOpen = switcherEl.classList.contains("is-open");
+  closeMobileMenu({instant:true});
+  closeMobileSitesDropdown({instant:true});
+  closeHeaderSearch();
+  closeAllLanguageDropdowns();
+  if(!isOpen){
+    switcherEl.classList.add("is-open");
+    switcherEl.querySelector("[data-language-trigger]")?.setAttribute("aria-expanded", "true");
+  }
+}
 
-  clearTimeout(languageSheetCloseTimer);
-  sheet.classList.add("is-closing");
-  mask?.classList.add("is-closing");
-  languageSheetCloseTimer = setTimeout(() => {
-    layer.innerHTML = "";
-  }, 260);
+function renderLanguageOptionsHtml(){
+  return LANGUAGE_OPTIONS.map(option => `
+    <button class="lang-dropdown-option ${option.id === currentLang ? "is-selected" : ""}" type="button" data-lang-dropdown-option="${option.id}">${escapeHtml(localize(option.label))}</button>
+  `).join("");
+}
+
+function bindLanguageDropdown(switcherEl){
+  if(!switcherEl){
+    return;
+  }
+  const dropdown = switcherEl.querySelector(".lang-dropdown");
+  if(dropdown){
+    dropdown.innerHTML = renderLanguageOptionsHtml();
+    dropdown.querySelectorAll("[data-lang-dropdown-option]").forEach(button => {
+      button.onclick = event => {
+        event.stopPropagation();
+        const lang = button.dataset.langDropdownOption;
+        closeAllLanguageDropdowns();
+        if(lang !== currentLang){
+          changeLanguage(lang);
+        }
+      };
+    });
+  }
+  const trigger = switcherEl.querySelector("[data-language-trigger]");
+  if(trigger){
+    trigger.onclick = event => {
+      event.stopPropagation();
+      toggleLanguageDropdown(switcherEl);
+    };
+  }
 }
 
 function getLanguageOption(lang){
@@ -1101,81 +1138,6 @@ function closeHeaderSearch(){
   }
   isHeaderSearchOpen = false;
   syncHeaderSearchState();
-}
-
-function openLanguageSheet(){
-  closeMobileSitesDropdown({instant:true});
-  closeMobileMenu({instant:true});
-  closeHeaderSearch();
-  const layer = document.getElementById("modalLayer");
-  setLanguageTriggersExpanded(true);
-
-  let pendingLang = currentLang;
-  layer.innerHTML = `
-    <div class="language-sheet-mask is-entering" role="presentation" data-close-language-sheet></div>
-    <section class="language-sheet is-entering" role="dialog" aria-modal="true" aria-labelledby="languageSheetTitle">
-      <div class="language-sheet-handle" aria-hidden="true"></div>
-      <div class="language-sheet-head">
-        <button class="language-sheet-close" type="button" aria-label="${escapeHtml(t("closeLanguageLabel"))}" data-close-language-sheet>
-          <span></span>
-          <span></span>
-        </button>
-        <h2 id="languageSheetTitle">${escapeHtml(t("languageSheetTitle"))}</h2>
-      </div>
-      <div class="language-visual" aria-hidden="true">
-        <span class="language-visual-card language-visual-card-zh">文</span>
-        <span class="language-visual-globe"></span>
-        <span class="language-visual-card language-visual-card-en">A</span>
-      </div>
-      <div class="language-choice-list">
-        ${LANGUAGE_OPTIONS.map(option => `
-          <button class="language-choice ${option.id === pendingLang ? "is-selected" : ""}" type="button" data-lang-sheet-option="${option.id}">
-            <span>${escapeHtml(localize(option.label))}</span>
-            <span class="language-check" aria-hidden="true"></span>
-          </button>
-        `).join("")}
-      </div>
-      <p class="language-sheet-note">${escapeHtml(t("languageSheetNote"))}</p>
-      <button class="language-save-btn" type="button" data-save-language disabled>${escapeHtml(t("languageSaveNoChange"))}</button>
-    </section>`;
-
-  const saveButton = layer.querySelector("[data-save-language]");
-  const sheet = layer.querySelector(".language-sheet");
-  const mask = layer.querySelector(".language-sheet-mask");
-  requestAnimationFrame(() => {
-    sheet?.classList.remove("is-entering");
-    mask?.classList.remove("is-entering");
-  });
-  const updateSheetState = () => {
-    layer.querySelectorAll("[data-lang-sheet-option]").forEach(button => {
-      button.classList.toggle("is-selected", button.dataset.langSheetOption === pendingLang);
-    });
-    if(saveButton){
-      const hasChange = pendingLang !== currentLang;
-      saveButton.disabled = !hasChange;
-      saveButton.textContent = hasChange ? t("languageSave") : t("languageSaveNoChange");
-    }
-  };
-
-  layer.querySelectorAll("[data-lang-sheet-option]").forEach(button => {
-    button.onclick = () => {
-      pendingLang = button.dataset.langSheetOption;
-      updateSheetState();
-    };
-  });
-
-  layer.querySelectorAll("[data-close-language-sheet]").forEach(button => {
-    button.onclick = closeLanguageSheet;
-  });
-
-  if(saveButton){
-    saveButton.onclick = () => {
-      if(pendingLang !== currentLang){
-        changeLanguage(pendingLang);
-      }
-      closeLanguageSheet();
-    };
-  }
 }
 
 function openContactModal(){
@@ -1924,13 +1886,14 @@ function bindChromeEvents(){
   const mobileLanguageButton = document.getElementById("mobileLanguageButton");
   if(mobileLanguageButton){
     mobileLanguageButton.setAttribute("aria-label", t("langLabel"));
-    mobileLanguageButton.onclick = openLanguageSheet;
   }
 
   const mobileLanguageLabel = document.getElementById("mobileLanguageLabel");
   if(mobileLanguageLabel){
     mobileLanguageLabel.textContent = getLanguageOption(currentLang).short;
   }
+
+  bindLanguageDropdown(document.querySelector(".language-switch.lang-switcher"));
 
   const searchInput = document.getElementById("keywordSearch");
   if(searchInput){
@@ -2006,6 +1969,9 @@ document.addEventListener("click", event => {
     !headerSearchButton?.contains(event.target)){
     closeHeaderSearch();
   }
+  if(!event.target.closest(".lang-switcher")){
+    closeAllLanguageDropdowns();
+  }
 });
 
 document.addEventListener("keydown", event => {
@@ -2013,9 +1979,7 @@ document.addEventListener("keydown", event => {
     closeMobileMenu();
     closeMobileSitesDropdown();
     closeHeaderSearch();
-    if(document.querySelector(".language-sheet")){
-      closeLanguageSheet();
-    }
+    closeAllLanguageDropdowns();
   }
 });
 
