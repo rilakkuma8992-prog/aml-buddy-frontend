@@ -492,6 +492,8 @@ let isHeaderSearchOpen = false;
 let languageSheetCloseTimer = null;
 let mobileMenuReturnState = null;
 let selectedQuestionReturnMode = "";
+let hasChosenBiz = false;
+let homeListScrollY = 0;
 
 function t(key){
   return UI_TEXT[currentLang][key];
@@ -723,6 +725,65 @@ function selectBiz(bizId){
   refreshUi();
 }
 
+function updateBizSelectVisibility(){
+  document.body.classList.toggle("show-biz-select", !hasChosenBiz);
+  const screen = document.getElementById("bizSelectScreen");
+  if(screen){
+    screen.setAttribute("aria-hidden", hasChosenBiz ? "true" : "false");
+  }
+}
+
+function chooseBizFromSelectScreen(bizId){
+  if(!activeDB[bizId]){
+    return;
+  }
+  selectedBiz = bizId;
+  hasChosenBiz = true;
+  expandedAspects = new Set();
+  expandedCategories = new Set();
+  selectedQuestion = null;
+  selectedQuestionReturnMode = "";
+  clearRecentSearchTimer();
+  searchQuery = "";
+  updateBizSelectVisibility();
+  refreshUi();
+}
+
+function returnToBizSelect(){
+  hasChosenBiz = false;
+  selectedQuestion = null;
+  selectedQuestionReturnMode = "";
+  closeHeaderSearch();
+  updateBizSelectVisibility();
+  refreshUi();
+}
+
+function renderBizSelectScreen(){
+  const screen = document.getElementById("bizSelectScreen");
+  if(!screen){
+    return;
+  }
+
+  screen.innerHTML = `
+    <div class="biz-select-inner">
+      <p class="biz-select-prompt">${escapeHtml(t("chooseBusinessPrompt"))}</p>
+      <div class="biz-select-actions">
+        ${getBizEntries().map(biz => `
+          <button class="biz-select-card" type="button" data-select-biz="${escapeHtml(biz.id)}">
+            <span class="biz-select-icon">${renderBizEntryIcon(biz.id)}</span>
+            <span class="biz-select-label">${escapeHtml(localize(biz.label))}</span>
+          </button>
+        `).join("")}
+      </div>
+    </div>`;
+}
+
+function bindBizSelectEvents(){
+  document.querySelectorAll("[data-select-biz]").forEach(button => {
+    button.onclick = () => chooseBizFromSelectScreen(button.dataset.selectBiz);
+  });
+}
+
 function toggleAspect(aspectId){
   if(expandedAspects.has(aspectId)){
     expandedAspects.delete(aspectId);
@@ -806,6 +867,7 @@ function jumpToAnswer(bizId, aspectId, topicId, idx){
 
 function returnToQuestionStart(){
   const shouldRestoreMobileMenu = selectedQuestionReturnMode === "mobile-menu";
+  const shouldRestoreHomeList = selectedQuestionReturnMode === "home-list";
   selectedQuestion = null;
   selectedQuestionReturnMode = "";
   closeHeaderSearch();
@@ -814,6 +876,10 @@ function returnToQuestionStart(){
   }
   closeMobileMenu({instant:true});
   refreshUi();
+  if(shouldRestoreHomeList){
+    const targetScrollY = homeListScrollY;
+    requestAnimationFrame(() => window.scrollTo(0, targetScrollY));
+  }
 }
 
 function applySearch(rawQuery, options = {}){
@@ -1499,14 +1565,8 @@ function renderAnswerPanel(){
     <div class="answer-empty">
       <span class="answer-empty-text answer-empty-question-prompt">${escapeHtml(t("emptyAnswer"))}</span>
       <div class="answer-empty-mobile-choice">
-        <span class="answer-empty-text answer-empty-business-prompt">${escapeHtml(t("chooseBusinessPrompt"))}</span>
-        <div class="answer-empty-biz-actions">
-          ${getBizEntries().map(biz => `
-            <button class="answer-empty-biz-card" type="button" data-open-question-menu-biz="${escapeHtml(biz.id)}">
-              <span class="answer-empty-biz-icon">${renderBizEntryIcon(biz.id)}</span>
-              <span class="answer-empty-biz-label">${escapeHtml(localize(biz.label))}</span>
-            </button>
-          `).join("")}
+        <div class="home-question-tree" id="homeQuestionTree">
+          ${renderMobileQuestionSection()}
         </div>
       </div>
     </div>`;
@@ -1540,7 +1600,10 @@ function renderAnswerPanel(){
       <div class="panel-head">
         <button class="answer-back-btn" type="button" data-answer-back>${escapeHtml(t("answerBack"))}</button>
       </div>`
-    : "";
+    : `
+      <div class="panel-head panel-head-home-list">
+        <button class="answer-back-btn" type="button" data-home-list-back>${escapeHtml(t("answerBack"))}</button>
+      </div>`;
 
   return `
     <section class="app-panel answer-panel">
@@ -1737,17 +1800,25 @@ function bindAppEvents(){
     button.onclick = returnToQuestionStart;
   });
 
+  document.querySelectorAll("[data-home-list-back]").forEach(button => {
+    button.onclick = returnToBizSelect;
+  });
+
   document.querySelectorAll("[data-aspect][data-topic][data-idx]").forEach(button => {
     button.onclick = () => {
       const shouldCloseMenu = Boolean(button.closest("#mobileMenuLayer"));
+      const isHomeList = Boolean(button.closest("#homeQuestionTree"));
       if(shouldCloseMenu){
         captureMobileMenuReturnState();
+      }
+      if(isHomeList){
+        homeListScrollY = window.scrollY;
       }
       selectQuestion(
         button.dataset.aspect,
         button.dataset.topic,
         Number(button.dataset.idx),
-        shouldCloseMenu ? {returnMode:"mobile-menu"} : {}
+        shouldCloseMenu ? {returnMode:"mobile-menu"} : (isHomeList ? {returnMode:"home-list"} : {})
       );
       if(shouldCloseMenu){
         closeMobileMenu();
@@ -1894,7 +1965,10 @@ function render(){
   renderAppPanels();
   renderMobileMenu();
   renderMobileSitesDropdown();
+  renderBizSelectScreen();
   bindAppEvents();
+  bindBizSelectEvents();
+  updateBizSelectVisibility();
 }
 
 document.addEventListener("click", event => {
