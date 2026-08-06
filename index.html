@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css?v=20260806-sites-dropdown-v3">
+<link rel="stylesheet" href="./css/style.css?v=20260806-ui-polish-v4">
 </head>
 <body>
 
@@ -59,11 +59,8 @@
       </div>
 
       <div class="lang-switcher sites-switcher" id="mobileSitesSwitcher">
-        <button class="mobile-nav-btn mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-haspopup="listbox" aria-expanded="false" data-dropdown-trigger>
-          <svg class="mobile-sites-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.6 1.6"></path>
-            <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.6-1.6"></path>
-          </svg>
+        <button class="mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-haspopup="listbox" aria-expanded="false" data-dropdown-trigger>
+          <span class="mobile-sites-label" id="mobileSitesLabel">常用網站</span>
         </button>
         <div class="lang-dropdown" id="mobileSitesDropdown"></div>
       </div>
@@ -101,9 +98,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js?v=20260806-sites-dropdown-v3"></script>
-<script src="./js/data.js?v=20260806-sites-dropdown-v3"></script>
-<script src="./js/translations.js?v=20260806-sites-dropdown-v3"></script>
-<script src="./js/app.js?v=20260806-sites-dropdown-v3"></script>
+<script src="./vendor/supabase-js.js?v=20260806-ui-polish-v4"></script>
+<script src="./js/data.js?v=20260806-ui-polish-v4"></script>
+<script src="./js/translations.js?v=20260806-ui-polish-v4"></script>
+<script src="./js/app.js?v=20260806-ui-polish-v4"></script>
 </body>
 </html>

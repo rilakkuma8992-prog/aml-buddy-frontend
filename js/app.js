@@ -102,7 +102,7 @@ const UI_TEXT = {
     popularKeywords:"Common Keywords",
     recentSearches:"Recent Searches",
     chooseBiz:"Select Business Line",
-    usefulSites:"Useful Sites",
+    usefulSites:"Related Links",
     usefulSitesTop:"Useful",
     usefulSitesBottom:"Sites",
     chooseQuestionCta:"Select Question",
@@ -767,6 +767,11 @@ function renderBizSelectScreen(){
   screen.innerHTML = `
     <div class="lang-switcher biz-select-lang-switcher" id="bizSelectLangSwitcher">
       <button class="biz-select-lang-btn mobile-language-trigger" type="button" id="bizSelectLanguageButton" aria-haspopup="listbox" aria-expanded="false" aria-label="${escapeHtml(t("langLabel"))}" data-dropdown-trigger>
+        <svg class="biz-select-lang-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
         <span id="bizSelectLanguageLabel">${escapeHtml(getLanguageOption(currentLang).short)}</span>
       </button>
       <div class="lang-dropdown" id="bizSelectLangDropdown"></div>
@@ -1438,7 +1443,7 @@ function renderCategoryStack(aspectGroups){
         return `
         <section class="topic-block aspect-block ${isAspectOpen ? "is-open" : ""}">
           <button class="topic-toggle aspect-toggle" type="button" data-aspect-toggle="${aspect.id}" aria-expanded="${isAspectOpen}">
-            <span class="toggle-icon">${isAspectOpen ? "−" : "+"}</span>
+            <span class="toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
             <span class="topic-name">${escapeHtml(localize(aspect.label))}</span>
             <span class="topic-count">${escapeHtml(formatQuestionCount(aspectQuestionTotal))}</span>
           </button>
@@ -1451,7 +1456,7 @@ function renderCategoryStack(aspectGroups){
                 return `
                   <section class="topic-block ${isOpen ? "is-open" : ""}">
                     <button class="topic-toggle" type="button" data-aspect="${group.aspectId}" data-category="${group.categoryId}" aria-expanded="${isOpen}">
-                      <span class="toggle-icon">${isOpen ? "−" : "+"}</span>
+                      <span class="toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
                       <span class="topic-name">${escapeHtml(localize(group.label))}</span>
                       <span class="topic-count">${escapeHtml(formatQuestionCount(questionTotal))}</span>
                     </button>
@@ -1569,7 +1574,7 @@ function renderAnswerPanel(){
   }
 
   return `
-    <section class="app-panel answer-panel">
+    <section class="app-panel answer-panel${selectedQuestion ? "" : " is-home-list"}">
       ${panelHeadHtml}
       <div class="panel-body">
         <div class="answer-shell">${answerHtml}</div>
@@ -1801,6 +1806,10 @@ function bindChromeEvents(){
   const mobileSitesButton = document.getElementById("mobileSitesButton");
   if(mobileSitesButton){
     mobileSitesButton.setAttribute("aria-label", t("usefulSites"));
+  }
+  const mobileSitesLabel = document.getElementById("mobileSitesLabel");
+  if(mobileSitesLabel){
+    mobileSitesLabel.textContent = t("usefulSites");
   }
   bindSitesDropdown(document.getElementById("mobileSitesSwitcher"));
 

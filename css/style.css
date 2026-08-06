@@ -223,11 +223,10 @@ button{
 }
 
 .mobile-sites-btn{
-  width:42px;
-  height:42px;
-  flex:0 0 42px;
+  display:grid;
   place-items:center;
-  padding:0;
+  height:42px;
+  padding:0 6px;
   border:0;
   border-radius:0;
   background:transparent;
@@ -245,6 +244,15 @@ button{
   stroke-width:2.75;
   stroke-linecap:round;
   stroke-linejoin:round;
+}
+
+.mobile-sites-label{
+  display:block;
+  white-space:nowrap;
+  color:inherit;
+  font-size:13.5px;
+  font-weight:750;
+  letter-spacing:0;
 }
 
 .mobile-nav-text{
@@ -881,17 +889,27 @@ button{
 }
 
 .toggle-icon{
-  width:26px;
-  height:26px;
-  flex:0 0 26px;
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
   display:grid;
   place-items:center;
-  border-radius:6px;
-  background:linear-gradient(135deg,var(--green-primary-soft),var(--green-primary));
-  color:var(--surface);
-  font-size:18px;
-  line-height:1;
-  font-weight:800;
+  color:#5c6a63;
+}
+
+.toggle-icon svg{
+  width:100%;
+  height:100%;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transition:transform .2s ease;
+}
+
+.topic-toggle[aria-expanded="true"] .toggle-icon svg{
+  transform:rotate(180deg);
 }
 
 .topic-name{
@@ -1475,9 +1493,14 @@ button{
 
   .sites-switcher{
     display:inline-flex;
-    width:36px;
+    width:auto;
     height:36px;
-    flex:0 0 36px;
+    flex:0 0 auto;
+  }
+
+  .mobile-sites-btn{
+    height:36px;
+    padding:0 2px;
   }
 
   .brand-area{
@@ -1538,7 +1561,7 @@ button{
   }
 
   .language-switch{
-    gap:0;
+    display:none;
   }
 
   .language-switch .language-option,
@@ -1870,6 +1893,27 @@ button{
     right:20px;
   }
 
+  #bizSelectLanguageButton{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    width:auto;
+    min-width:0;
+    padding:0 2px;
+  }
+
+  .biz-select-lang-icon{
+    width:22px;
+    height:22px;
+    flex:0 0 22px;
+    display:block;
+    color:#4e5a54;
+    opacity:.85;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+  }
+
   .biz-select-inner{
     display:grid;
     gap:28px;
@@ -1956,9 +2000,13 @@ button{
     padding:12px 14px 14px;
   }
 
+  .answer-panel.is-home-list .contact-card{
+    display:none;
+  }
+
   .page-footer-note{
     padding:0 4px;
-    text-align:left;
+    text-align:center;
   }
 
   .mobile-menu-layer{
@@ -2216,11 +2264,9 @@ button{
   }
 
   .mobile-question-card .toggle-icon{
-    width:24px;
-    height:24px;
-    flex-basis:24px;
-    border-radius:6px;
-    font-size:17px;
+    width:22px;
+    height:22px;
+    flex-basis:22px;
   }
 
   .mobile-question-card .aspect-toggle .topic-name,
@@ -2417,11 +2463,22 @@ button{
   }
 
   .mobile-nav-btn,
-  .mobile-header-search-toggle,
-  .sites-switcher{
+  .mobile-header-search-toggle{
     width:34px;
     height:34px;
     flex-basis:34px;
+  }
+
+  .sites-switcher{
+    height:34px;
+  }
+
+  .mobile-sites-btn{
+    height:34px;
+  }
+
+  .mobile-sites-label{
+    font-size:12.5px;
   }
 
   .mobile-nav-text{
