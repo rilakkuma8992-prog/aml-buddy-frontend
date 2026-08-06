@@ -177,6 +177,7 @@ button{
 .mobile-header-search-toggle,
 .mobile-sites-layer,
 .mobile-language-trigger,
+.sites-switcher,
 .mobile-menu-layer{
   display:none;
 }
@@ -321,6 +322,18 @@ button{
 
 .lang-switcher.is-open .lang-dropdown{
   display:block;
+}
+
+#mobileSitesDropdown{
+  min-width:210px;
+}
+
+#mobileSitesDropdown .site-links{
+  gap:6px;
+}
+
+#mobileSitesDropdown .site-link{
+  border-radius:7px;
 }
 
 .lang-dropdown-option{
@@ -1460,6 +1473,13 @@ button{
     flex:0 0 36px;
   }
 
+  .sites-switcher{
+    display:inline-flex;
+    width:36px;
+    height:36px;
+    flex:0 0 36px;
+  }
+
   .brand-area{
     flex:1;
     min-width:0;
@@ -2397,7 +2417,8 @@ button{
   }
 
   .mobile-nav-btn,
-  .mobile-header-search-toggle{
+  .mobile-header-search-toggle,
+  .sites-switcher{
     width:34px;
     height:34px;
     flex-basis:34px;

@@ -489,8 +489,6 @@ let recentSearches = [];
 let recentSearchTimer = null;
 let isMobileMenuOpen = false;
 let mobileMenuCloseTimer = null;
-let isMobileSitesOpen = false;
-let mobileSitesCloseTimer = null;
 let isHeaderSearchOpen = false;
 let mobileMenuReturnState = null;
 let selectedQuestionReturnMode = "";
@@ -768,7 +766,7 @@ function renderBizSelectScreen(){
 
   screen.innerHTML = `
     <div class="lang-switcher biz-select-lang-switcher" id="bizSelectLangSwitcher">
-      <button class="biz-select-lang-btn mobile-language-trigger" type="button" id="bizSelectLanguageButton" aria-haspopup="listbox" aria-expanded="false" aria-label="${escapeHtml(t("langLabel"))}" data-language-trigger>
+      <button class="biz-select-lang-btn mobile-language-trigger" type="button" id="bizSelectLanguageButton" aria-haspopup="listbox" aria-expanded="false" aria-label="${escapeHtml(t("langLabel"))}" data-dropdown-trigger>
         <span id="bizSelectLanguageLabel">${escapeHtml(getLanguageOption(currentLang).short)}</span>
       </button>
       <div class="lang-dropdown" id="bizSelectLangDropdown"></div>
@@ -945,36 +943,45 @@ function changeLanguage(lang){
   }
 }
 
-function setLanguageTriggersExpanded(isExpanded){
-  document.querySelectorAll("[data-language-trigger]").forEach(button => {
+function setDropdownTriggersExpanded(isExpanded){
+  document.querySelectorAll("[data-dropdown-trigger]").forEach(button => {
     button.setAttribute("aria-expanded", isExpanded ? "true" : "false");
   });
 }
 
 function closeModal(){
   document.getElementById("modalLayer").innerHTML = "";
-  setLanguageTriggersExpanded(false);
+  setDropdownTriggersExpanded(false);
 }
 
-function closeAllLanguageDropdowns(){
+function closeAllMiniDropdowns(){
   document.querySelectorAll(".lang-switcher").forEach(el => {
     el.classList.remove("is-open");
   });
-  setLanguageTriggersExpanded(false);
+  setDropdownTriggersExpanded(false);
 }
 
-function toggleLanguageDropdown(switcherEl){
+function toggleMiniDropdown(switcherEl){
   if(!switcherEl){
     return;
   }
   const isOpen = switcherEl.classList.contains("is-open");
   closeMobileMenu({instant:true});
-  closeMobileSitesDropdown({instant:true});
   closeHeaderSearch();
-  closeAllLanguageDropdowns();
+  closeAllMiniDropdowns();
   if(!isOpen){
     switcherEl.classList.add("is-open");
-    switcherEl.querySelector("[data-language-trigger]")?.setAttribute("aria-expanded", "true");
+    switcherEl.querySelector("[data-dropdown-trigger]")?.setAttribute("aria-expanded", "true");
+  }
+}
+
+function bindMiniDropdownTrigger(switcherEl){
+  const trigger = switcherEl?.querySelector("[data-dropdown-trigger]");
+  if(trigger){
+    trigger.onclick = event => {
+      event.stopPropagation();
+      toggleMiniDropdown(switcherEl);
+    };
   }
 }
 
@@ -995,20 +1002,30 @@ function bindLanguageDropdown(switcherEl){
       button.onclick = event => {
         event.stopPropagation();
         const lang = button.dataset.langDropdownOption;
-        closeAllLanguageDropdowns();
+        closeAllMiniDropdowns();
         if(lang !== currentLang){
           changeLanguage(lang);
         }
       };
     });
   }
-  const trigger = switcherEl.querySelector("[data-language-trigger]");
-  if(trigger){
-    trigger.onclick = event => {
-      event.stopPropagation();
-      toggleLanguageDropdown(switcherEl);
-    };
+  bindMiniDropdownTrigger(switcherEl);
+}
+
+function bindSitesDropdown(switcherEl){
+  if(!switcherEl){
+    return;
   }
+  const dropdown = switcherEl.querySelector(".lang-dropdown");
+  if(dropdown){
+    dropdown.innerHTML = renderUsefulLinks();
+    dropdown.querySelectorAll(".site-link").forEach(link => {
+      link.onclick = () => {
+        closeAllMiniDropdowns();
+      };
+    });
+  }
+  bindMiniDropdownTrigger(switcherEl);
 }
 
 function getLanguageOption(lang){
@@ -1020,7 +1037,7 @@ function syncMobileMenuState(){
 }
 
 function openMobileMenu(){
-  closeMobileSitesDropdown({instant:true});
+  closeAllMiniDropdowns();
   closeHeaderSearch();
   closeSearchDropdown();
   clearTimeout(mobileMenuCloseTimer);
@@ -1064,44 +1081,6 @@ function closeMobileMenu(options = {}){
   }, 260);
 }
 
-function syncMobileSitesState(){
-  document.body.classList.toggle("is-mobile-sites-open", isMobileSitesOpen);
-  const button = document.getElementById("mobileSitesButton");
-  if(button){
-    button.setAttribute("aria-expanded", String(isMobileSitesOpen));
-    button.setAttribute("aria-label", isMobileSitesOpen ? t("closeUsefulSitesLabel") : t("usefulSites"));
-  }
-}
-
-function openMobileSitesDropdown(){
-  closeMobileMenu({instant:true});
-  closeHeaderSearch();
-  closeSearchDropdown();
-  clearTimeout(mobileSitesCloseTimer);
-  document.body.classList.remove("is-mobile-sites-closing");
-  isMobileSitesOpen = true;
-  renderMobileSitesDropdown();
-  syncMobileSitesState();
-}
-
-function closeMobileSitesDropdown(options = {}){
-  if(!isMobileSitesOpen && !document.body.classList.contains("is-mobile-sites-closing")){
-    return;
-  }
-  clearTimeout(mobileSitesCloseTimer);
-  isMobileSitesOpen = false;
-  if(options.instant){
-    document.body.classList.remove("is-mobile-sites-open", "is-mobile-sites-closing");
-    syncMobileSitesState();
-    return;
-  }
-  document.body.classList.add("is-mobile-sites-closing");
-  syncMobileSitesState();
-  mobileSitesCloseTimer = setTimeout(() => {
-    document.body.classList.remove("is-mobile-sites-closing");
-  }, 220);
-}
-
 function syncHeaderSearchState(){
   document.body.classList.toggle("is-header-search-open", isHeaderSearchOpen);
   const button = document.getElementById("mobileHeaderSearchButton");
@@ -1122,7 +1101,7 @@ function syncHeaderSearchState(){
 
 function openHeaderSearch(){
   closeMobileMenu({instant:true});
-  closeMobileSitesDropdown({instant:true});
+  closeAllMiniDropdowns();
   closeSearchDropdown();
   isHeaderSearchOpen = true;
   syncHeaderSearchState();
@@ -1629,42 +1608,6 @@ function renderMobileMenu(){
   syncMobileMenuState();
 }
 
-function renderMobileSitesDropdown(){
-  const layer = document.getElementById("mobileSitesLayer");
-  if(!layer){
-    return;
-  }
-
-  layer.innerHTML = `
-    <div class="mobile-sites-backdrop" data-mobile-sites-close></div>
-    <section class="mobile-sites-dropdown" role="dialog" aria-modal="true" aria-labelledby="mobileSitesTitle">
-      <div class="mobile-sheet-handle" aria-hidden="true"></div>
-      <div class="mobile-sites-top">
-        <button class="mobile-menu-close mobile-sites-close" type="button" aria-label="${escapeHtml(t("closeUsefulSitesLabel"))}" data-mobile-sites-close>
-          <span></span>
-          <span></span>
-        </button>
-        <h2 id="mobileSitesTitle">${escapeHtml(t("usefulSites"))}</h2>
-      </div>
-      <div class="mobile-sites-content">
-        ${renderUsefulLinks()}
-      </div>
-    </section>`;
-
-  syncMobileSitesState();
-  bindMobileSitesDropdownEvents();
-}
-
-function bindMobileSitesDropdownEvents(){
-  document.querySelectorAll("[data-mobile-sites-close]").forEach(button => {
-    button.onclick = closeMobileSitesDropdown;
-  });
-
-  document.querySelectorAll("#mobileSitesLayer .site-link").forEach(link => {
-    link.onclick = closeMobileSitesDropdown;
-  });
-}
-
 function isMobileMenuMounted(){
   return Boolean(document.querySelector("#mobileMenuLayer .mobile-menu-content"));
 }
@@ -1834,14 +1777,6 @@ function bindAppEvents(){
     };
   }
 
-  document.querySelectorAll("[data-mobile-sites-close]").forEach(button => {
-    button.onclick = closeMobileSitesDropdown;
-  });
-
-  document.querySelectorAll("#mobileSitesLayer .site-link").forEach(link => {
-    link.onclick = closeMobileSitesDropdown;
-  });
-
   bindMobileSearchEvents();
 }
 
@@ -1865,23 +1800,9 @@ function bindChromeEvents(){
 
   const mobileSitesButton = document.getElementById("mobileSitesButton");
   if(mobileSitesButton){
-    mobileSitesButton.onclick = () => {
-      if(isMobileSitesOpen){
-        closeMobileSitesDropdown();
-      }else{
-        openMobileSitesDropdown();
-      }
-    };
+    mobileSitesButton.setAttribute("aria-label", t("usefulSites"));
   }
-  const mobileSitesTopLabel = document.getElementById("mobileSitesTopLabel");
-  const mobileSitesBottomLabel = document.getElementById("mobileSitesBottomLabel");
-  if(mobileSitesTopLabel){
-    mobileSitesTopLabel.textContent = t("usefulSitesTop");
-  }
-  if(mobileSitesBottomLabel){
-    mobileSitesBottomLabel.textContent = t("usefulSitesBottom");
-  }
-  syncMobileSitesState();
+  bindSitesDropdown(document.getElementById("mobileSitesSwitcher"));
 
   const mobileLanguageButton = document.getElementById("mobileLanguageButton");
   if(mobileLanguageButton){
@@ -1949,7 +1870,6 @@ function render(){
   renderChrome();
   renderAppPanels();
   renderMobileMenu();
-  renderMobileSitesDropdown();
   renderBizSelectScreen();
   bindAppEvents();
   bindBizSelectEvents();
@@ -1970,16 +1890,15 @@ document.addEventListener("click", event => {
     closeHeaderSearch();
   }
   if(!event.target.closest(".lang-switcher")){
-    closeAllLanguageDropdowns();
+    closeAllMiniDropdowns();
   }
 });
 
 document.addEventListener("keydown", event => {
   if(event.key === "Escape"){
     closeMobileMenu();
-    closeMobileSitesDropdown();
     closeHeaderSearch();
-    closeAllLanguageDropdowns();
+    closeAllMiniDropdowns();
   }
 });
 

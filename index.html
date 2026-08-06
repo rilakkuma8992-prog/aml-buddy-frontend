@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AML Buddy 互動原型 Demo</title>
-<link rel="stylesheet" href="./css/style.css?v=20260806-lang-dropdown-v2">
+<link rel="stylesheet" href="./css/style.css?v=20260806-sites-dropdown-v3">
 </head>
 <body>
 
@@ -58,12 +58,15 @@
         <div class="search-dropdown" id="searchDropdown"></div>
       </div>
 
-      <button class="mobile-nav-btn mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-expanded="false">
-        <svg class="mobile-sites-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.6 1.6"></path>
-          <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.6-1.6"></path>
-        </svg>
-      </button>
+      <div class="lang-switcher sites-switcher" id="mobileSitesSwitcher">
+        <button class="mobile-nav-btn mobile-sites-btn" id="mobileSitesButton" type="button" aria-label="常用網站" aria-haspopup="listbox" aria-expanded="false" data-dropdown-trigger>
+          <svg class="mobile-sites-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.6 1.6"></path>
+            <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.6-1.6"></path>
+          </svg>
+        </button>
+        <div class="lang-dropdown" id="mobileSitesDropdown"></div>
+      </div>
 
       <div class="language-switch lang-switcher" aria-label="語言切換">
         <button class="language-option is-active" type="button" data-lang-option="zh">中</button>
@@ -71,7 +74,7 @@
         <button class="language-option" type="button" data-lang-option="en">EN</button>
         <span aria-hidden="true">／</span>
         <button class="language-option" type="button" data-lang-option="ja">日</button>
-        <button class="mobile-language-trigger" id="mobileLanguageButton" type="button" aria-haspopup="listbox" aria-expanded="false" data-language-trigger>
+        <button class="mobile-language-trigger" id="mobileLanguageButton" type="button" aria-haspopup="listbox" aria-expanded="false" data-dropdown-trigger>
           <span id="mobileLanguageLabel">ZH</span>
         </button>
         <div class="lang-dropdown" id="mobileLangDropdown"></div>
@@ -89,7 +92,6 @@
 </main>
 
 <div class="mobile-menu-layer" id="mobileMenuLayer"></div>
-<div class="mobile-sites-layer" id="mobileSitesLayer"></div>
 <div id="modalLayer"></div>
 
 <script>
@@ -99,9 +101,9 @@ window.AML_BUDDY_SUPABASE = {
   table: "aml_buddy_faqs"
 };
 </script>
-<script src="./vendor/supabase-js.js?v=20260806-lang-dropdown-v2"></script>
-<script src="./js/data.js?v=20260806-lang-dropdown-v2"></script>
-<script src="./js/translations.js?v=20260806-lang-dropdown-v2"></script>
-<script src="./js/app.js?v=20260806-lang-dropdown-v2"></script>
+<script src="./vendor/supabase-js.js?v=20260806-sites-dropdown-v3"></script>
+<script src="./js/data.js?v=20260806-sites-dropdown-v3"></script>
+<script src="./js/translations.js?v=20260806-sites-dropdown-v3"></script>
+<script src="./js/app.js?v=20260806-sites-dropdown-v3"></script>
 </body>
 </html>
