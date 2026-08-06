@@ -1093,7 +1093,7 @@ button{
 .language-sheet-mask{
   position:fixed;
   inset:0;
-  z-index:44;
+  z-index:95;
   background:rgba(0,0,0,.36);
   opacity:1;
   transition:opacity .24s ease;
@@ -1104,7 +1104,7 @@ button{
   left:0;
   right:0;
   bottom:0;
-  z-index:45;
+  z-index:96;
   width:min(520px,100%);
   margin:0 auto;
   padding:22px 0 max(28px,env(safe-area-inset-bottom));
@@ -1775,6 +1775,12 @@ button{
     background:
       radial-gradient(circle at 50% 38%,rgba(var(--green-primary-rgb),0.14),transparent 34%),
       linear-gradient(145deg,#f7fbf6 0%,#e7f5e6 46%,#cde8d2 100%);
+  }
+
+  .biz-select-lang-btn{
+    position:absolute;
+    top:max(18px,calc(env(safe-area-inset-top) + 14px));
+    right:20px;
   }
 
   .biz-select-inner{

@@ -765,6 +765,9 @@ function renderBizSelectScreen(){
   }
 
   screen.innerHTML = `
+    <button class="biz-select-lang-btn mobile-language-trigger" type="button" id="bizSelectLanguageButton" aria-haspopup="dialog" aria-expanded="false" aria-label="${escapeHtml(t("langLabel"))}" data-language-trigger>
+      <span id="bizSelectLanguageLabel">${escapeHtml(getLanguageOption(currentLang).short)}</span>
+    </button>
     <div class="biz-select-inner">
       <p class="biz-select-prompt">${escapeHtml(t("chooseBusinessPrompt"))}</p>
       <div class="biz-select-actions">
@@ -782,6 +785,11 @@ function bindBizSelectEvents(){
   document.querySelectorAll("[data-select-biz]").forEach(button => {
     button.onclick = () => chooseBizFromSelectScreen(button.dataset.selectBiz);
   });
+
+  const bizSelectLanguageButton = document.getElementById("bizSelectLanguageButton");
+  if(bizSelectLanguageButton){
+    bizSelectLanguageButton.onclick = openLanguageSheet;
+  }
 }
 
 function toggleAspect(aspectId){
@@ -934,22 +942,22 @@ function changeLanguage(lang){
   }
 }
 
+function setLanguageTriggersExpanded(isExpanded){
+  document.querySelectorAll("[data-language-trigger]").forEach(button => {
+    button.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+  });
+}
+
 function closeModal(){
   document.getElementById("modalLayer").innerHTML = "";
-  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
-  if(mobileLanguageButton){
-    mobileLanguageButton.setAttribute("aria-expanded", "false");
-  }
+  setLanguageTriggersExpanded(false);
 }
 
 function closeLanguageSheet(){
   const layer = document.getElementById("modalLayer");
   const sheet = layer.querySelector(".language-sheet");
   const mask = layer.querySelector(".language-sheet-mask");
-  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
-  if(mobileLanguageButton){
-    mobileLanguageButton.setAttribute("aria-expanded", "false");
-  }
+  setLanguageTriggersExpanded(false);
   if(!sheet){
     closeModal();
     return;
@@ -1097,10 +1105,7 @@ function openLanguageSheet(){
   closeMobileMenu({instant:true});
   closeHeaderSearch();
   const layer = document.getElementById("modalLayer");
-  const mobileLanguageButton = document.getElementById("mobileLanguageButton");
-  if(mobileLanguageButton){
-    mobileLanguageButton.setAttribute("aria-expanded", "true");
-  }
+  setLanguageTriggersExpanded(true);
 
   let pendingLang = currentLang;
   layer.innerHTML = `
