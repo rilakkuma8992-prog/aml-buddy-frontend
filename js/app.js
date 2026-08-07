@@ -865,6 +865,7 @@ function selectQuestion(aspectId, topicId, idx, options = {}){
   selectedQuestion = {biz:selectedBiz, aspect:aspectId, topic:topicId, idx};
   selectedQuestionReturnMode = options.returnMode || "";
   refreshUi();
+  requestAnimationFrame(() => window.scrollTo(0, 0));
 }
 
 function jumpToAnswer(bizId, aspectId, topicId, idx){
@@ -877,6 +878,7 @@ function jumpToAnswer(bizId, aspectId, topicId, idx){
   selectedQuestion = {biz:bizId, aspect:aspectId, topic:topicId, idx};
   selectedQuestionReturnMode = "";
   refreshUi();
+  requestAnimationFrame(() => window.scrollTo(0, 0));
 }
 
 function returnToQuestionStart(){
